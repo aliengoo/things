@@ -1,0 +1,10 @@
+.idea
+node_modules
+idea
+bower_components
+wwwroot/app.js
+wwwroot/css/**
+wwwroot/vendor.css
+wwwroot/fonts/**
+
+
