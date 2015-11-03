@@ -47,14 +47,14 @@ export default class ThingCategory extends Component {
   }
 
   _renderEditable() {
-    const {category, categories} = this.props;
+    const {thingCategory, categories} = this.props;
 
-    let options = categories.map((category, key) =>
-      <option value={category} key={key}>{category}</option>);
+    let options = categories.map((c, key) =>
+      <option value={c} key={key}>{c}</option>);
 
     return (
       <div className="thing-editable">
-        <select name="thingCategory" ref="thingCategory" className="form-control" value={category} onChange={this._onChange}>
+        <select name="thingCategory" ref="thingCategory" className="form-control" value={thingCategory} onChange={this._onChange}>
           {options}
         </select>
       </div>
@@ -65,7 +65,7 @@ export default class ThingCategory extends Component {
 ThingCategory.propTypes = {
   thingIsBeingEdited: React.PropTypes.bool.isRequired,
   container: PropTypes.string.isRequired,
-  category: PropTypes.string,
+  thingCategory: PropTypes.string,
   categories: PropTypes.array.isRequired,
   setCategory: PropTypes.func.isRequired
 };

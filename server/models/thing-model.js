@@ -4,8 +4,14 @@ var mongoose = require('mongoose');
 
 const thingSchema = new mongoose.Schema({
   category: {
-    type: string,
+    type: String,
     required: true
+  },
+  department: {
+    type: String
+  },
+  user: {
+    type: String
   },
   type: {
     type: string,
@@ -16,7 +22,10 @@ const thingSchema = new mongoose.Schema({
     required: true
   },
   vendor: {
-    type: string
+    type: String
+  },
+  serialNo: {
+    type: String
   },
   assetId: {
     type: String

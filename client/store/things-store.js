@@ -7,16 +7,18 @@ import rootReducer from '../reducers/root-reducer';
 import { devTools, persistState } from 'redux-devtools';
 
 const initialState = {
-  container: null,
+  container: "",
 
   // set when a filter operation is ongoing
   thingsFilterFetching: false,
 
   // the filter used for all things
-  thingsFilter: null,
+  thingsFilter: {},
 
   // the things currently being viewed based on the thingsFilter
   things: [],
+
+  thingsPage: {},
 
   // set then a single thing is in the view, and being pulled or pushed to the server
   thingFetching: false,
@@ -25,7 +27,7 @@ const initialState = {
   thing: null,
 
   // when a thing is being edited, this is the previous state
-  thingBeingEditedPriorState: null,
+  thingPriorState: null,
 
   thingIsBeingEdited: false,
 

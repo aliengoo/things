@@ -11,12 +11,14 @@ import Col from '../../components/col';
 import {ContainerChangeAction} from '../actions/common-actions';
 
 import {
-  GetThingCategoriesAction,
+  AbortEditingThingAction,
   SetThingCategoryAction,
   SetThingNameAction,
   SetThingTypeAction,
   UpdateThingActionBroadcastAction,
-  DeleteThingActionBroadcastAction
+  DeleteThingActionBroadcastAction,
+  InitThingAction,
+  GetThingAction
 } from './actions/thing-actions';
 
 import ThingConfig from './thing-config';
@@ -28,21 +30,41 @@ import ThingAlerts from './components/thing-alerts';
 /**
  * Root container
  */
-export default class ThingView extends Component {
-
-
+export default class ThingContainer extends Component {
   componentWillMount() {
     this.props.dispatch(ContainerChangeAction.create(ThingConfig.container));
 
     var socket = getSocket();
 
     socket.on('UpdateThingActionBroadcastAction', (response) => {
-      UpdateThingActionBroadcastAction.create(response.data);
+      UpdateThingActionBroadcastAction.create({
+        updatedThing: response.data,
+        thing: this.props.thing
+      });
     });
 
     socket.on('DeleteThingActionBroadcastAction', (response) => {
-      DeleteThingActionBroadcastAction.create(response.data);
+      DeleteThingActionBroadcastAction.create({
+        deletedId: response.data,
+        thing: this.props.thing
+      });
     });
+  }
+
+  componentWillUnmount() {
+    const {thingIsBeingEdited, thingPriorState, dispatch} = this.props;
+
+    if (thingIsBeingEdited) {
+      dispatch(AbortEditingThingAction.create(thingPriorState));
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.params.id) {
+      this.props.dispatch(GetThingAction.create(this.props.params.id));
+    } else {
+      this.props.dispatch(InitThingAction.create());
+    }
   }
 
   render() {
@@ -51,7 +73,7 @@ export default class ThingView extends Component {
       err,
       thingFetching,
       thing,
-      thingBeingEditedPriorState,
+      thingPriorState,
       thingWasDeleted,
       thingWasUpdated} = this.props.dispatch;
 
@@ -71,12 +93,19 @@ export default class ThingView extends Component {
 
           <Col media="lg" size={12}>
             <form name="thingForm">
-              <ThingName setName={(name) => dispatch(SetThingNameAction.create(name))}/>
+              <ThingName
+                thingName={thing.name}
+                setName={(name) => dispatch(SetThingNameAction.create(name))}/>
+
               <ThingCategory
+                thingCategory={thing.category}
                 setCategory={(category) => dispatch(SetThingCategoryAction.create(category))}
                 categories={ThingConfig.categories}
               />
-              <ThingType setType={(type) => dispatch(SetThingTypeAction.create(type))}
+
+              <ThingType
+                thingType={thing.type}
+                setType={(type) => dispatch(SetThingTypeAction.create(type))}
               />
             </form>
           </Col>
@@ -109,9 +138,11 @@ function select(state) {
   return {
     thingFetching: state.thingFetching,
     thing: state.thing,
-    thingBeingEditedPriorState: state.thing,
+    thingPriorState: state.thingPriorState,
+    thingWasDeleted: state.thingWasDeleted,
+    thingWasUpdated: state.thingWasUpdated,
     err: state.err
   };
 }
 
-export default connect(select)(ThingView);
+export default connect(select)(ThingContainer);

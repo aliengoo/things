@@ -15,6 +15,7 @@ export default function creator(type, container) {
     type,
     create: (data) => {
       return {
+        _asyncStatus: undefined,
         container,
         type,
         data
