@@ -25,7 +25,6 @@ export default class ThingHeader extends Component {
 }
 
 ThingHeader.propTypes = {
-  thingIsBeingEdited: React.PropTypes.bool.isRequired,
-  container: PropTypes.string.isRequired,
-  thing: PropTypes.thing.isRequired
+  thingIsBeingEdited: PropTypes.bool,
+  thing: PropTypes.object
 };

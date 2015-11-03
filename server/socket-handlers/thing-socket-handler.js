@@ -4,6 +4,7 @@ const Thing = require('../models/thing-model');
 const assign = require('object-assign');
 const _ = require('lodash');
 const validateQueryRequest = require('../helpers/query-helper').validateQueryRequest;
+const calculatePage = require('../helpers/pagination-helper').calculate;
 
 module.exports = thingSocketHandler;
 
@@ -54,7 +55,6 @@ function thingSocketHandler(socket) {
 
           if (!err) {
             socket.broadcast.emit("UpdateThingActionBroadcastAction", {
-              socketId: socket.id,
               data: updatedThing
             });
           }
@@ -100,25 +100,42 @@ function thingSocketHandler(socket) {
           err: errors
         });
       } else {
-        let query =  Thing.find(clientQuery.query);
 
-        if (meta.hasLimitProperty) {
-          query.limit(clientQuery.limit);
-        }
+        let countQuery = Thing.count(clientQuery.query, function(err, count){
+          if (err) {
+            callback({
+              err
+            });
+          } else {
 
-        if (meta.hasSortProperty) {
-          query.sort(clientQuery.sort);
-        }
+            let page = calculatePage({
+              current: request.date.page
+            }, count);
 
-        if (meta.hasSelectProperty) {
-          query.select(clientQuery.select);
-        }
+            let query = Thing.find(clientQuery.query);
 
-        query.exec(function (err, results) {
-          callback({
-            err: err,
-            data: results
-          });
+            if (meta.hasLimitProperty) {
+              query.limit(clientQuery.limit);
+            }
+
+            if (meta.hasSortProperty) {
+              query.sort(clientQuery.sort);
+            }
+
+            if (meta.hasSelectProperty) {
+              query.select(clientQuery.select);
+            }
+
+            query.exec(function (err, results) {
+              callback({
+                err: err,
+                data: {
+                  page: page,
+                  things: results
+                }
+              });
+            });
+          }
         });
       }
     });

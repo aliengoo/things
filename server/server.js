@@ -7,7 +7,7 @@ var http = require('http');
 var socketIo = require('socket.io');
 
 const app = express();
-const server = http.createServer(app);
+const server = http.Server(app);
 const io = socketIo(server);
 
 app.use(express.static("../wwwroot"));
@@ -19,9 +19,9 @@ require('./routes/motd-route')(app);
 
 // sockets
 io.sockets.on('connection', function (socket) {
-
+  require('./socket-handlers/thing-socket-handler')(socket);
 });
 
 
 
-app.listen(3000, () => console.log("I'm listening..."));
+server.listen(3000, () => console.log("I'm listening..."));

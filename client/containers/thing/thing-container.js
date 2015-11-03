@@ -69,9 +69,11 @@ export default class ThingContainer extends Component {
 
   render() {
     const {
+      container,
       dispatch,
       err,
       thingFetching,
+      thingIsBeingEdited,
       thing,
       thingPriorState,
       thingWasDeleted,
@@ -83,13 +85,13 @@ export default class ThingContainer extends Component {
       alert = (
         <Alert alertType={"danger"}>
           {err}
-        </Alert>)
+        </Alert>);
     }
 
     return (
       <div className="thing-view">
         <Container>
-          <ThingHeader thing={thing}/>
+          <ThingHeader thing={thing} thingIsBeingEdited={thingIsBeingEdited} container={container}/>
 
           <Col media="lg" size={12}>
             <form name="thingForm">
@@ -110,12 +112,10 @@ export default class ThingContainer extends Component {
             </form>
           </Col>
 
-          <!-- Container level errors -->
           <Col media="lg" size={12}>
             <ThingAlerts thingWasDeleted={thingWasDeleted} thingWasUpdated={thingWasUpdated}/>
           </Col>
 
-          <!-- Application level errors -->
           <Col  media="lg" size={12}>
             {alert}
           </Col>
@@ -137,6 +137,7 @@ function select(state) {
 
   return {
     thingFetching: state.thingFetching,
+    thingIsBeingEdited: state.thingIsBeingEdited,
     thing: state.thing,
     thingPriorState: state.thingPriorState,
     thingWasDeleted: state.thingWasDeleted,

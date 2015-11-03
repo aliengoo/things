@@ -9,7 +9,7 @@ var path = require('path');
 var source = require('vinyl-source-stream');
 
 gulp.task('lint', function () {
-  return gulp.src(["./src/**/*.js"])
+  return gulp.src(["./client/**/*.js"])
     .pipe(glp.eslint())
     .pipe(glp.eslint.format());
 });
@@ -19,7 +19,7 @@ gulp.task('browserify', ['lint'], function (done) {
   var args = watchify.args;
   args.extensions = ['.js'];
 
-  watchify(browserify(path.join("./src", "main.js"), args), args)
+  watchify(browserify(path.join("./client", "index.js"), args), args)
     .transform(babelify)
     .bundle()
     .on('error', function(err){
@@ -55,10 +55,10 @@ gulp.task('vendor:icons', function () {
 gulp.task('app:css', function () {
 
   // pipe the target file to the
-  var mainFile = [path.join("./src/styles", "app.scss")];
+  var mainFile = [path.join("./client/styles", "app.scss")];
   var imports = [
     "!" + mainFile[0],
-    "./src/**/*.scss"
+    "./client/**/*.scss"
   ];
 
   return gulp.src(mainFile)
@@ -83,6 +83,6 @@ gulp.task('app:css', function () {
 gulp.task('default', ['vendor:icons', 'vendor:css', 'app:css', 'browserify'], function () {
   glp.livereload.listen();
 
-  gulp.watch('./src/**/*.js', ['browserify']);
-  gulp.watch('./src/**/*.scss', ['app:css']);
+  gulp.watch('./client/**/*.js', ['browserify']);
+  gulp.watch('./client/**/*.scss', ['app:css']);
 });

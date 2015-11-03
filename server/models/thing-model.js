@@ -14,7 +14,7 @@ const thingSchema = new mongoose.Schema({
     type: String
   },
   type: {
-    type: string,
+    type: String,
     required: true
   },
   name: {

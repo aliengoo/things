@@ -1,6 +1,7 @@
 "use strict";
 
 import AsyncStatus from '../../../api/async-status';
+import ThingConfig from '../thing-config';
 
 import {
   GetThingAction,
@@ -25,7 +26,7 @@ export function thing(state = null, action) {
 
     // not async operation
     if (!action._asyncStatus) {
-      switch(action.type) {
+      switch (action.type) {
         case InitThingAction.type:
           newState = {};
           break;

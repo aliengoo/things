@@ -10,15 +10,19 @@ const initialState = {
   container: "",
 
   // set when a filter operation is ongoing
-  thingsFilterFetching: false,
+  thingsFetching: false,
 
   // the filter used for all things
-  thingsFilter: {},
+  thingsFilter: {
+    limit: 10
+  },
 
   // the things currently being viewed based on the thingsFilter
   things: [],
 
-  thingsPage: {},
+  thingsPage: {
+    page: 1
+  },
 
   // set then a single thing is in the view, and being pulled or pushed to the server
   thingFetching: false,

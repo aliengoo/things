@@ -17,6 +17,10 @@ import {thingWasDeleted} from '../containers/thing/reducers/thing-was-deleted-re
 import {thingWasUpdated} from '../containers/thing/reducers/thing-was-updated-reducer';
 
 // things container reducers
+import {thingsFetching} from '../containers/things/reducers/things-fetching-reducer';
+import {thingsFilter} from '../containers/things/reducers/things-filter-reducer';
+import {thingsPage} from '../containers/things/reducers/things-page-reducer';
+import {things} from '../containers/things/reducers/things-reducer';
 
 const rootReducer = combineReducers({
   container,
@@ -26,7 +30,12 @@ const rootReducer = combineReducers({
   thingPriorState,
   thing,
   thingWasDeleted,
-  thingWasUpdated
+  thingWasUpdated,
+
+  thingsFetching,
+  thingsFilter,
+  thingsPage,
+  things
 });
 
 export default rootReducer;
