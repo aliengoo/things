@@ -16,6 +16,6 @@ export default class ThingAlerts extends Component {
 }
 
 ThingAlerts.propTypes = {
-  thingWasDeleted: PropTypes.bool.isRequired,
-  thingWasUpdated: PropTypes.bool.isRequired
+  thingWasDeleted: PropTypes.bool,
+  thingWasUpdated: PropTypes.bool
 };

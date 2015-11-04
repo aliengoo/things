@@ -4,14 +4,16 @@ import React, {Component, PropTypes} from 'react';
 
 export default class ThingHeader extends Component {
   render() {
+    const {thing, thingIsBeingEdited} = this.props;
+
     let klassName;
     let content;
 
-    if (this.props.thing === null || (this.props.thing.name || "").trim().length === 0) {
+    if (thing && thing.name) {
+      content = this.props.thing.name;
+    } else {
       klassName = "thing-header-with-no-name";
       content = "The thing has no name";
-    } else {
-      content = this.props.thing.name;
     }
 
     return (
@@ -26,5 +28,5 @@ export default class ThingHeader extends Component {
 
 ThingHeader.propTypes = {
   thingIsBeingEdited: PropTypes.bool,
-  thing: PropTypes.object
+  thingName: PropTypes.object
 };

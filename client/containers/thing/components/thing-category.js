@@ -19,7 +19,7 @@ export default class ThingCategory extends Component {
   }
 
   render() {
-    const {thingIsBeingEdited, container} = this.props;
+    const {thingIsBeingEdited, thing, container} = this.props;
 
     let content;
 
@@ -30,6 +30,7 @@ export default class ThingCategory extends Component {
     }
 
     return (
+
       <div className="thing-category">
         <FormGroup>
           <ControlLabel>Category</ControlLabel>
@@ -39,15 +40,21 @@ export default class ThingCategory extends Component {
   }
 
   _renderViewable() {
+    const {thing} = this.props;
+
+    let category = (thing && thing.category) ? thing.category: "[EMPTY]";
+
     return (
       <div className="thing-viewable">
-        <p className="form-control-static">{this.props.category || "[EMPTY]"}</p>
+        <p className="form-control-static">{category}</p>
       </div>
     );
   }
 
   _renderEditable() {
-    const {thingCategory, categories} = this.props;
+    const {thingCategory, thing, categories} = this.props;
+
+    let category = (thing && thing.category) ? thing.category: "[EMPTY]";
 
     let options = categories.map((c, key) =>
       <option value={c} key={key}>{c}</option>);
@@ -63,9 +70,9 @@ export default class ThingCategory extends Component {
 }
 
 ThingCategory.propTypes = {
-  thingIsBeingEdited: React.PropTypes.bool.isRequired,
-  container: PropTypes.string.isRequired,
-  thingCategory: PropTypes.string,
+  thingIsBeingEdited: React.PropTypes.bool,
+  container: PropTypes.string,
+  thing: PropTypes.object,
   categories: PropTypes.array.isRequired,
   setCategory: PropTypes.func.isRequired
 };

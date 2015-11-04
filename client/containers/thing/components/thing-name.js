@@ -20,7 +20,7 @@ export default class ThingName extends Component {
 
   render() {
 
-    const {thingIsBeingEdited, container} = this.props;
+    const {thing, thingIsBeingEdited, container} = this.props;
 
     let content;
 
@@ -41,19 +41,28 @@ export default class ThingName extends Component {
   }
 
   _renderViewable() {
+    const {thing} = this.props;
+
+    let name = (thing && thing.name) ? thing.name: "[EMPTY]";
+
     return (
       <div className="thing-viewable">
-        <p className="form-control-static">{this.props.thingName || "[EMPTY]"}</p>
+        <p className="form-control-static">{name}</p>
       </div>
     );
   }
 
   _renderEditable() {
+
+    const {thing} = this.props;
+
+    let name = (thing && thing.name) ? thing.name: "[EMPTY]";
+
     return (
       <div className="thing-editable">
         <input
           type="text"
-          value={this.props.thingName}
+          value={name}
           ref="thingName"
           className="form-control"
           maxLength={50}
@@ -64,9 +73,9 @@ export default class ThingName extends Component {
 }
 
 ThingName.propTypes = {
-  thingIsBeingEdited: React.PropTypes.bool.isRequired,
-  thingName: PropTypes.string,
-  container: PropTypes.string.isRequired,
+  thingIsBeingEdited: React.PropTypes.bool,
+  thing: PropTypes.object,
+  container: PropTypes.string,
   setName: PropTypes.func.isRequired
 };
 

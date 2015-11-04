@@ -4,6 +4,7 @@ import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {getSocket} from '../../api/socket';
 
+import NavBar from '../../components/nav-bar';
 import Container from '../../components/container';
 import Row from '../../components/row';
 import Col from '../../components/col';
@@ -12,6 +13,7 @@ import {ContainerChangeAction} from '../actions/common-actions';
 
 import {
   AbortEditingThingAction,
+  StartEditingThingAction,
   SetThingCategoryAction,
   SetThingNameAction,
   SetThingTypeAction,
@@ -25,7 +27,13 @@ import ThingConfig from './thing-config';
 import ThingHeader from './components/thing-header';
 import ThingCategory from './components/thing-category';
 import ThingName from './components/thing-name';
+import ThingType from './components/thing-type';
 import ThingAlerts from './components/thing-alerts';
+
+import ThingUpdateBtn from './components/thing-update-btn';
+import ThingAbortBtn from './components/thing-abort-btn';
+import ThingEditBtn from './components/thing-edit-btn';
+import ThingDeleteBtn from './components/thing-delete-btn';
 
 /**
  * Root container
@@ -90,33 +98,51 @@ export default class ThingContainer extends Component {
 
     return (
       <div className="thing-view">
+        <NavBar appName="Things"/>
         <Container>
           <ThingHeader thing={thing} thingIsBeingEdited={thingIsBeingEdited} container={container}/>
 
           <Col media="lg" size={12}>
             <form name="thingForm">
               <ThingName
-                thingName={thing.name}
+                thing={thing}
+                container={container}
+                thingIsBeingEdited={thingIsBeingEdited}
                 setName={(name) => dispatch(SetThingNameAction.create(name))}/>
 
               <ThingCategory
-                thingCategory={thing.category}
+                thing={thing}
+                container={container}
+                thingIsBeingEdited={thingIsBeingEdited}
                 setCategory={(category) => dispatch(SetThingCategoryAction.create(category))}
                 categories={ThingConfig.categories}
               />
 
               <ThingType
-                thingType={thing.type}
+                thing={thing}
+                container={container}
+                types={ThingConfig.types}
+                thingIsBeingEdited={thingIsBeingEdited}
                 setType={(type) => dispatch(SetThingTypeAction.create(type))}
               />
             </form>
           </Col>
 
           <Col media="lg" size={12}>
+            <ThingEditBtn
+              editThing={() => dispatch(StartEditingThingAction.create(thing))}
+              thingIsBeingEdited={thingIsBeingEdited}/>
+
+            <ThingAbortBtn
+              abortEditingThing={() => dispatch(AbortEditingThingAction.create(thingPriorState))}
+              thingIsBeingEdited={thingIsBeingEdited}/>
+          </Col>
+
+          <Col media="lg" size={12}>
             <ThingAlerts thingWasDeleted={thingWasDeleted} thingWasUpdated={thingWasUpdated}/>
           </Col>
 
-          <Col  media="lg" size={12}>
+          <Col media="lg" size={12}>
             {alert}
           </Col>
         </Container>

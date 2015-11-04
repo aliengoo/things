@@ -1,16 +1,15 @@
 "use strict";
 
-import React from 'react';
+import React, {Component, PropTypes} from 'react';
 
 import FormGroup from '../../../components/form-group';
 import ControlLabel from '../../../components/control-label';
 
-export default class ThingType extends React.Component {
+export default class ThingType extends Component {
 
   constructor() {
     super();
 
-    this._renderBasedOnCategory = this._renderBasedOnCategory.bind(this);
     this._renderEditable = this._renderEditable.bind(this);
     this._renderViewable = this._renderViewable.bind(this);
   }
@@ -38,12 +37,14 @@ export default class ThingType extends React.Component {
 
   _renderViewable() {
 
-    const {category} = this.props;
+    const {category, thing} = this.props;
+
+    let thingType = (thing && thing.type) ? thing.type : ["EMPTY"];
 
     let content;
 
     if(category) {
-      content = <p className="form-control-static">{this.props.type || "[EMPTY]"}</p>;
+      content = <p className="form-control-static">{thingType}</p>;
     } else {
       content = <p className="form-control-static">{"[CATEGORY NOT SET]"}</p>;
     }
@@ -57,7 +58,9 @@ export default class ThingType extends React.Component {
 
   _renderEditable() {
 
-    const {category, types} = this.props;
+    const {category, thing, types} = this.props;
+
+    let thingType = (thing && thing.type) ? thing.type : [""];
 
     var categoryTypes = types[category];
 
@@ -66,7 +69,7 @@ export default class ThingType extends React.Component {
 
     return (
       <div className="thing-editable">
-        <select value={this.props.type}  ref="thingName" className="form-control" onChange={this._onChange}>
+        <select value={thingType}  ref="thingName" className="form-control" onChange={this._onChange}>
           {options}
         </select>
       </div>
@@ -75,10 +78,10 @@ export default class ThingType extends React.Component {
 }
 
 ThingType.propTypes = {
-  thingIsBeingEdited: React.PropTypes.bool.isRequired,
-  container: PropTypes.string.isRequired,
-  category: React.PropTypes.string,
-  type: React.PropTypes.string,
-  types: React.PropType.object.isRequired,
-  setType: React.PropTypes.func.isRequired
+  thingIsBeingEdited: PropTypes.bool,
+  container: PropTypes.string,
+  category: PropTypes.string,
+  thing: PropTypes.object,
+  types: PropTypes.object.isRequired,
+  setType: PropTypes.func.isRequired
 };
