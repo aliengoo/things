@@ -16,7 +16,7 @@ import {
   UpdateThingActionBroadcastAction
 } from '../actions/thing-actions';
 
-export function thingForm(state = null, action) {
+export function thingFormElementState(state = null, action) {
   let newState = state;
 
   if (action.container === ThingConfig.container) {
@@ -25,12 +25,12 @@ export function thingForm(state = null, action) {
       switch (action.type) {
         // When aborting, reset the form state
         case AbortEditingThingAction.type:
-          newState = null;
+          newState = {};
           break;
         // When external delete occurs on the currently viewed action, reset the form
         case DeleteThingActionBroadcastAction.type:
           if (action.data.thing && action.data.thing._id === action.data.deletedId) {
-            newState = null;
+            newState = {};
           }
           break;
         // When external update occurs, the thing is reset, therefore the form should be reset

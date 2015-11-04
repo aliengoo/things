@@ -9,13 +9,14 @@ import React, {Component, PropTypes} from 'react';
  */
 export default class ErrorHelpBlock extends Component {
   render() {
-    const {validityState} = this.props;
+    const {formElementState, property} = this.props;
 
-    if (validityState) {
+    if (formElementState && formElementState[property] && formElementState[property].$validity) {
+      let $validity = formElementState[property].$validity;
       let errors = [];
 
       React.Children.forEach(this.props.children, function (child) {
-        if (validityState[child.type] === true) {
+        if ($validity[child.type] === true) {
           errors.push({type: child.type, content: child.props.children});
         }
       });
@@ -31,5 +32,6 @@ export default class ErrorHelpBlock extends Component {
 }
 
 ErrorHelpBlock.propTypes = {
-  validityState: PropTypes.object
+  property: PropTypes.string.isRequired,
+  formElementState: PropTypes.object
 };

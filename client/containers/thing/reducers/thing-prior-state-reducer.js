@@ -27,7 +27,7 @@ export function thingPriorState(state = null, action) {
       switch(action.type) {
         case InitThingAction.type:
         case AbortEditingThingAction.type:
-          newState = null;
+          newState = {};
           break;
         case StartEditingThingAction.type:
           // action creator should supply the thing as-is

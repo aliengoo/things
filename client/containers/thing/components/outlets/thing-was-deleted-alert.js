@@ -1,7 +1,7 @@
 "use strict";
 
 import React, {Component, PropTypes} from 'react';
-import Alert from '../../../components/alert';
+import Alert from '../../../../components/alert';
 
 export default class ThingWasDeletedWarning extends Component {
   render() {

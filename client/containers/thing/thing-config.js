@@ -3,6 +3,24 @@
 export default {
   container: "thing",
   categories: ["Hardware", "Software"],
+  validation: {
+    name: {
+      required: true,
+      minLength: 2,
+      maxLength: 100
+    },
+    category: {
+      required: true
+    },
+    type: {
+      required: true
+    },
+    vendor: {},
+    description: {},
+    user: {},
+    department: {},
+    assetId: {}
+  },
 
   // mapped to categories
   types: {

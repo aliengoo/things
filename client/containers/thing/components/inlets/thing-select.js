@@ -9,11 +9,17 @@ export default class ThingSelect extends Component {
   }
 
   _onChange(event) {
-    this.props.setValue(event.target.value);
+    const {validate, thingProperty, setValue} = this.props;
+
+    if (validate) {
+      validate(thingProperty, event.target);
+    }
+
+    setValue(thingProperty, event.target.value);
   }
 
   render() {
-    const {thing, thingProperty, excludeBlank, options} = this.props;
+    const {thing, thingProperty, excludeBlank, options, required} = this.props;
 
     let actualOptions = excludeBlank ? [...options] : ["", ...options];
 
@@ -22,7 +28,11 @@ export default class ThingSelect extends Component {
 
     return (
       <div className="thing-editable thing-select">
-        <select className="form-control" onChange={this._onChange} value={thing[thingProperty]}>
+        <select
+          className="form-control"
+          onChange={this._onChange}
+          value={thing[thingProperty]}
+          required={required}>
           {viewOptions}
         </select>
       </div>
@@ -32,8 +42,10 @@ export default class ThingSelect extends Component {
 
 ThingSelect.propTypes = {
   excludeBlank: PropTypes.bool,
+  required: PropTypes.bool,
   options: PropTypes.array,
   thing: PropTypes.object,
+  validate: PropTypes.func,
   thingProperty: PropTypes.string.isRequired,
   setValue: PropTypes.func.isRequired
 };

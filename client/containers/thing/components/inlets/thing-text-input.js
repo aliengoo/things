@@ -9,15 +9,16 @@ export default class ThingTextInput extends Component {
   }
 
   _onChange(event) {
-    if (this.props.validate){
-      this.props.validate(event.target);
+
+    if (this.props.validate) {
+      this.props.validate(this.props.thingProperty, event.target);
     }
 
-    this.props.setValue(event.target.value);
+    this.props.setValue(this.props.thingProperty, event.target.value);
   }
 
   render() {
-    const {thing, thingForm, thingProperty, minLength, maxLength, required, disabled} = this.props;
+    const {thing, thingProperty, minLength, maxLength, required, disabled} = this.props;
 
     return (
       <div className="thing-text-input">
@@ -41,7 +42,6 @@ ThingTextInput.propTypes = {
   disabled: PropTypes.bool,
   validate: PropTypes.func,
   thing: PropTypes.object.isRequired,
-  thingForm: PropTypes.object.isRequired,
   thingProperty: PropTypes.string.isRequired,
   setValue: PropTypes.func.isRequired
 };

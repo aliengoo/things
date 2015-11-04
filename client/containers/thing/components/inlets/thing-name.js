@@ -1,17 +1,17 @@
 "use strict";
 
 import React, {Component, PropTypes} from 'react';
-import FormGroup from '../../../components/form-group';
-import ControlLabel from '../../../components/control-label';
+import FormGroup from '../../../../components/form-group';
+import ControlLabel from '../../../../components/control-label';
 
-import ThingStaticValue from './thing-static-value';
+import ThingStaticValue from './../outlets/thing-static-value';
 import ThingTextInput from './thing-text-input';
-import ErrorHelpBlock from '../../../components/error-help-block';
+import ErrorHelpBlock from '../../../../components/error-help-block';
 
 export default class ThingName extends Component {
 
   render() {
-    const {thing, thingForm, thingIsBeingEdited, setValue, validate} = this.props;
+    const {thing, thingFormElementState, thingIsBeingEdited, setValue, validate} = this.props;
     const thingProperty = "name";
     const required = true;
     const maxLength = 100;
@@ -23,13 +23,12 @@ export default class ThingName extends Component {
         <div>
           <ThingTextInput
             thing={thing}
-            thingForm={thingForm}
             thingProperty={thingProperty}
             setValue={setValue}
             validate={validate}
             required={required}
             maxLength={maxLength}/>
-          <ErrorHelpBlock validityState={thingForm[thingProperty]}>
+          <ErrorHelpBlock formElementState={thingFormElementState} property={thingProperty}>
             <valueMissing>
               The value is required
             </valueMissing>
@@ -42,7 +41,7 @@ export default class ThingName extends Component {
 
     return (
       <div className="thing-name">
-        <FormGroup>
+        <FormGroup formElementState={thingFormElementState} property={thingProperty}>
           <ControlLabel>Name</ControlLabel>
           {content}
         </FormGroup>
@@ -52,10 +51,8 @@ export default class ThingName extends Component {
 
 ThingName.propTypes = {
   thingIsBeingEdited: PropTypes.bool,
-  thingPriorState: PropTypes.object,
   thing: PropTypes.object,
-  thingForm: PropTypes.object,
-  container: PropTypes.string,
+  thingFormElementState: PropTypes.object,
   validate: PropTypes.func.isRequired,
   setValue: PropTypes.func.isRequired
 };

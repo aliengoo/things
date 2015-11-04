@@ -4,6 +4,8 @@ import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {getSocket} from '../../api/socket';
 
+
+
 import NavBar from '../../components/nav-bar';
 import Container from '../../components/container';
 import Row from '../../components/row';
@@ -22,22 +24,26 @@ import {
   GetThingAction
 } from './actions/thing-actions';
 
+// inlets - they take information in
 import ThingConfig from './thing-config';
-import ThingHeader from './components/thing-header';
-import ThingCategory from './components/thing-category';
-import ThingName from './components/thing-name';
-import ThingType from './components/thing-type';
-import ThingDescription from './components/thing-description';
-import ThingAssetId from './components/thing-asset-id';
-import ThingDepartment from './components/thing-department';
-import ThingAlerts from './components/thing-alerts';
-import ThingVendor from './components/thing-vendor';
-import ThingUser from './components/thing-user';
+import ThingCategory from './components/inlets/thing-category';
+import ThingName from './components/inlets/thing-name';
+import ThingType from './components/inlets/thing-type';
+import ThingDescription from './components/inlets/thing-description';
+import ThingAssetId from './components/inlets/thing-asset-id';
+import ThingDepartment from './components/inlets/thing-department';
+import ThingVendor from './components/inlets/thing-vendor';
+import ThingUser from './components/inlets/thing-user';
 
-import ThingUpdateBtn from './components/thing-update-btn';
-import ThingAbortBtn from './components/thing-abort-btn';
-import ThingEditBtn from './components/thing-edit-btn';
-import ThingDeleteBtn from './components/thing-delete-btn';
+// outlets - send information to the view
+import ThingHeader from './components/outlets/thing-header';
+import ThingAlerts from './components/outlets/thing-alerts';
+
+// controls - user actions performed on the form
+import ThingUpdateBtn from './components/controls/thing-update-btn';
+import ThingAbortBtn from './components/controls/thing-abort-btn';
+import ThingEditBtn from './components/controls/thing-edit-btn';
+import ThingDeleteBtn from './components/controls/thing-delete-btn';
 
 /**
  * Root container
@@ -80,26 +86,28 @@ export default class ThingContainer extends Component {
   }
 
   componentDidMount() {
-    if (this.props.params.id) {
-      this.props.dispatch(GetThingAction.create(this.props.params.id));
+    const {params, dispatch} = this.props;
+    if (params && params.id) {
+      dispatch(GetThingAction.create(params.id));
     } else {
-      this.props.dispatch(InitThingAction.create());
+      dispatch(InitThingAction.create());
     }
   }
 
-  _setValue(property) {
+  _setValue() {
     const {dispatch} = this.props;
-    return function (value) {
+    return function (property, value) {
       let data = {};
       data[property] = value;
       dispatch(SetThingPropertyAction.create(data));
     };
   }
 
-  _validate(property) {
-    const {dispatch} = this.props;
-    return function(element) {
+  _validate() {
+    const {dispatch, thingPriorState} = this.props;
+    return function (property, element) {
       let data = {
+        priorState: thingPriorState,
         property: property,
         element: element
       };
@@ -117,7 +125,7 @@ export default class ThingContainer extends Component {
       thingFetching,
       thingIsBeingEdited,
       thing,
-      thingForm,
+      thingFormElementState,
       thingPriorState,
       thingWasDeleted,
       thingWasUpdated} = this.props;
@@ -130,7 +138,6 @@ export default class ThingContainer extends Component {
           {err}
         </Alert>);
     }
-
     return (
       <div className="thing-view">
         <NavBar appName="Things"/>
@@ -138,44 +145,38 @@ export default class ThingContainer extends Component {
           <Col>
             <ThingHeader thing={thing} thingIsBeingEdited={thingIsBeingEdited} container={container}/>
           </Col>
-          <form name="thingForm">
+          <form name="thingFormElementState">
             <Col media="lg" gridSize={6}>
               <ThingName
                 thing={thing}
-                thingForm={thingForm}
-                validate={this._validate("name")}
-                container={container}
+                thingFormElementState={thingFormElementState}
                 thingIsBeingEdited={thingIsBeingEdited}
-                setValue={this._setValue("name")}
+                validate={this._validate()}
+                setValue={this._setValue()}
               />
 
               <ThingCategory
                 thing={thing}
-                thingForm={thingForm}
+                thingFormElementState={thingFormElementState}
                 thingIsBeingEdited={thingIsBeingEdited}
-                validate={this._validate("category")}
-                setValue={this._setValue("category")}
-                container={container}
-                categories={ThingConfig.categories}
+                validate={this._validate()}
+                setValue={this._setValue()}
               />
 
               <ThingType
                 thing={thing}
-                thingForm={thingForm}
-                validate={this._validate("type")}
-                container={container}
-                types={ThingConfig.types}
+                thingFormElementState={thingFormElementState}
                 thingIsBeingEdited={thingIsBeingEdited}
-                setValue={this._setValue("type")}
+                validate={this._validate()}
+                setValue={this._setValue()}
               />
 
               <ThingVendor
                 thing={thing}
-                thingForm={thingForm}
-                validate={this._validate("vendor")}
-                container={container}
+                thingFormElementState={thingFormElementState}
                 thingIsBeingEdited={thingIsBeingEdited}
-                setValue={this._setValue("vendor")}
+                validate={this._validate()}
+                setValue={this._setValue()}
               />
 
 
@@ -183,38 +184,34 @@ export default class ThingContainer extends Component {
             <Col media="lg" gridSize={6}>
               <ThingDescription
                 thing={thing}
-                thingForm={thingForm}
-                validate={this._validate("description")}
-                container={container}
+                thingFormElementState={thingFormElementState}
                 thingIsBeingEdited={thingIsBeingEdited}
-                setValue={this._setValue("description")}/>
+                validate={this._validate()}
+                setValue={this._setValue()}/>
 
               <ThingUser
                 thing={thing}
-                thingForm={thingForm}
-                validate={this._validate("user")}
-                container={container}
+                thingFormElementState={thingFormElementState}
                 thingIsBeingEdited={thingIsBeingEdited}
-                setValue={this._setValue("user")}
+                validate={this._validate()}
+                setValue={this._setValue()}
               />
 
               <ThingDepartment
                 thing={thing}
-                thingForm={thingForm}
-                validate={this._validate("department")}
-                container={container}
+                thingFormElementState={thingFormElementState}
                 thingIsBeingEdited={thingIsBeingEdited}
-                setValue={this._setValue("department")}
+                validate={this._validate()}
+                setValue={this._setValue()}
               />
 
 
               <ThingAssetId
                 thing={thing}
-                thingForm={thingForm}
-                validate={this._validate("assetId")}
-                container={container}
+                thingFormElementState={thingFormElementState}
                 thingIsBeingEdited={thingIsBeingEdited}
-                setValue={this._setValue("assetId")}
+                validate={this._validate()}
+                setValue={this._setValue()}
               />
 
             </Col>
@@ -239,6 +236,7 @@ export default class ThingContainer extends Component {
           </Col>
         </Container>
       </div>);
+
   }
 
   renderFetching() {
@@ -257,7 +255,7 @@ function select(state) {
     thingFetching: state.thingFetching,
     thingIsBeingEdited: state.thingIsBeingEdited,
     thing: state.thing,
-    thingForm: state.thingForm,
+    thingFormElementState: state.thingFormElementState,
     thingPriorState: state.thingPriorState,
     thingWasDeleted: state.thingWasDeleted,
     thingWasUpdated: state.thingWasUpdated,

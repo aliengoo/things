@@ -4,18 +4,29 @@ import React, {Component, PropTypes} from 'react';
 
 export default class FormGroup extends Component {
   render() {
-    const {validityState} = this.props;
+    let formGroupClassName = "form-group";
+    const {formElementState, property} = this.props;
 
-    let stateKlassName = "form-group";
+    if (formElementState && property) {
+      let elementState = formElementState[property];
 
-    if (validityState) {
-        if (!validityState.valid) {
-          stateKlassName += " has-error";
+      if (elementState) {
+        if (elementState.$dirty) {
+          if (elementState.$validity.valid) {
+            formGroupClassName = `${formGroupClassName} has-success`;
+          } else {
+            formGroupClassName = `${formGroupClassName} has-error`;
+          }
         }
+      }
+
+    } else if (formElementState  && !property) {
+      console.warn("Did you mean to set the property for this form group?");
     }
 
+
     return (
-      <div className={stateKlassName}>
+      <div className={formGroupClassName}>
         {this.props.children}
       </div>
     );
@@ -23,5 +34,6 @@ export default class FormGroup extends Component {
 }
 
 FormGroup.propTypes = {
-  validityState: PropTypes.object
+  property: PropTypes.string,
+  formElementState: PropTypes.object
 };
