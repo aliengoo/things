@@ -7,9 +7,7 @@ import ThingConfig from '../thing-config';
 import {
   GetThingAction, // null (when complete); otherwise default
   InitThingAction, // null, the user is creating a new instance
-  SetThingNameAction, // default, the user is setting date on "thing"
-  SetThingCategoryAction, // default, the user is setting date on "thing"
-  SetThingTypeAction, // default, the user is setting date on "thing"
+  SetThingPropertyAction, // default, the user is setting date on "thing"
   StartEditingThingAction, // the "thing"
   AbortEditingThingAction, // null - the user aborted editing, this "thingPriorState" is used to repop "thing"
   CreateThingAction, // null

@@ -4,30 +4,40 @@ import React, {Component, PropTypes} from 'react';
 import FormGroup from '../../../components/form-group';
 import ControlLabel from '../../../components/control-label';
 
+import ThingStaticValue from './thing-static-value';
+import ThingTextInput from './thing-text-input';
+import ErrorHelpBlock from '../../../components/error-help-block';
+
 export default class ThingName extends Component {
 
-  constructor() {
-    super();
-
-    this._onChange = this._onChange.bind(this);
-    this._renderEditable = this._renderEditable.bind(this);
-    this._renderViewable = this._renderViewable.bind(this);
-  }
-
-  _onChange(event) {
-    this.props.setName(event.target.value);
-  }
-
   render() {
-
-    const {thing, thingIsBeingEdited, container} = this.props;
+    const {thing, thingForm, thingIsBeingEdited, setValue, validate} = this.props;
+    const thingProperty = "name";
+    const required = true;
+    const maxLength = 100;
 
     let content;
 
     if (thingIsBeingEdited) {
-      content = this._renderEditable();
+      content = (
+        <div>
+          <ThingTextInput
+            thing={thing}
+            thingForm={thingForm}
+            thingProperty={thingProperty}
+            setValue={setValue}
+            validate={validate}
+            required={required}
+            maxLength={maxLength}/>
+          <ErrorHelpBlock validityState={thingForm[thingProperty]}>
+            <valueMissing>
+              The value is required
+            </valueMissing>
+          </ErrorHelpBlock>
+        </div>
+      );
     } else {
-      content = this._renderViewable();
+      content = <ThingStaticValue thing={thing} thingProperty={thingProperty}/>;
     }
 
     return (
@@ -36,46 +46,16 @@ export default class ThingName extends Component {
           <ControlLabel>Name</ControlLabel>
           {content}
         </FormGroup>
-      </div>
-    );
-  }
-
-  _renderViewable() {
-    const {thing} = this.props;
-
-    let name = (thing && thing.name) ? thing.name: "[EMPTY]";
-
-    return (
-      <div className="thing-viewable">
-        <p className="form-control-static">{name}</p>
-      </div>
-    );
-  }
-
-  _renderEditable() {
-
-    const {thing} = this.props;
-
-    let name = (thing && thing.name) ? thing.name: "[EMPTY]";
-
-    return (
-      <div className="thing-editable">
-        <input
-          type="text"
-          value={name}
-          ref="thingName"
-          className="form-control"
-          maxLength={50}
-          onChange={this._onChange}/>
-      </div>
-    );
+      </div>);
   }
 }
 
 ThingName.propTypes = {
-  thingIsBeingEdited: React.PropTypes.bool,
+  thingIsBeingEdited: PropTypes.bool,
+  thingPriorState: PropTypes.object,
   thing: PropTypes.object,
+  thingForm: PropTypes.object,
   container: PropTypes.string,
-  setName: PropTypes.func.isRequired
+  validate: PropTypes.func.isRequired,
+  setValue: PropTypes.func.isRequired
 };
-

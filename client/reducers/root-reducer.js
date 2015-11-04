@@ -15,6 +15,7 @@ import {thingPriorState} from '../containers/thing/reducers/thing-prior-state-re
 import {thing} from '../containers/thing/reducers/thing-reducer';
 import {thingWasDeleted} from '../containers/thing/reducers/thing-was-deleted-reducer';
 import {thingWasUpdated} from '../containers/thing/reducers/thing-was-updated-reducer';
+import {thingForm} from '../containers/thing/reducers/thing-form-reducer';
 
 // things container reducers
 import {thingsFetching} from '../containers/things/reducers/things-fetching-reducer';
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   thingIsBeingEdited,
   thingPriorState,
   thing,
+  thingForm,
   thingWasDeleted,
   thingWasUpdated,
 

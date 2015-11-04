@@ -14,9 +14,8 @@ import {ContainerChangeAction} from '../actions/common-actions';
 import {
   AbortEditingThingAction,
   StartEditingThingAction,
-  SetThingCategoryAction,
-  SetThingNameAction,
-  SetThingTypeAction,
+  SetThingPropertyAction,
+  SetThingFormPropertyValidityAction,
   UpdateThingActionBroadcastAction,
   DeleteThingActionBroadcastAction,
   InitThingAction,
@@ -28,7 +27,12 @@ import ThingHeader from './components/thing-header';
 import ThingCategory from './components/thing-category';
 import ThingName from './components/thing-name';
 import ThingType from './components/thing-type';
+import ThingDescription from './components/thing-description';
+import ThingAssetId from './components/thing-asset-id';
+import ThingDepartment from './components/thing-department';
 import ThingAlerts from './components/thing-alerts';
+import ThingVendor from './components/thing-vendor';
+import ThingUser from './components/thing-user';
 
 import ThingUpdateBtn from './components/thing-update-btn';
 import ThingAbortBtn from './components/thing-abort-btn';
@@ -39,6 +43,14 @@ import ThingDeleteBtn from './components/thing-delete-btn';
  * Root container
  */
 export default class ThingContainer extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this._validate = this._validate.bind(this);
+    this._setValue = this._setValue.bind(this);
+  }
+
   componentWillMount() {
     this.props.dispatch(ContainerChangeAction.create(ThingConfig.container));
 
@@ -75,17 +87,40 @@ export default class ThingContainer extends Component {
     }
   }
 
+  _setValue(property) {
+    const {dispatch} = this.props;
+    return function (value) {
+      let data = {};
+      data[property] = value;
+      dispatch(SetThingPropertyAction.create(data));
+    };
+  }
+
+  _validate(property) {
+    const {dispatch} = this.props;
+    return function(element) {
+      let data = {
+        property: property,
+        element: element
+      };
+
+      dispatch(SetThingFormPropertyValidityAction.create(data));
+    };
+  }
+
+
   render() {
     const {
-      container,
       dispatch,
+      container,
       err,
       thingFetching,
       thingIsBeingEdited,
       thing,
+      thingForm,
       thingPriorState,
       thingWasDeleted,
-      thingWasUpdated} = this.props.dispatch;
+      thingWasUpdated} = this.props;
 
     let alert = (<div></div>);
 
@@ -100,35 +135,92 @@ export default class ThingContainer extends Component {
       <div className="thing-view">
         <NavBar appName="Things"/>
         <Container>
-          <ThingHeader thing={thing} thingIsBeingEdited={thingIsBeingEdited} container={container}/>
-
-          <Col media="lg" size={12}>
-            <form name="thingForm">
+          <Col>
+            <ThingHeader thing={thing} thingIsBeingEdited={thingIsBeingEdited} container={container}/>
+          </Col>
+          <form name="thingForm">
+            <Col media="lg" gridSize={6}>
               <ThingName
                 thing={thing}
+                thingForm={thingForm}
+                validate={this._validate("name")}
                 container={container}
                 thingIsBeingEdited={thingIsBeingEdited}
-                setName={(name) => dispatch(SetThingNameAction.create(name))}/>
+                setValue={this._setValue("name")}
+              />
 
               <ThingCategory
                 thing={thing}
-                container={container}
+                thingForm={thingForm}
                 thingIsBeingEdited={thingIsBeingEdited}
-                setCategory={(category) => dispatch(SetThingCategoryAction.create(category))}
+                validate={this._validate("category")}
+                setValue={this._setValue("category")}
+                container={container}
                 categories={ThingConfig.categories}
               />
 
               <ThingType
                 thing={thing}
+                thingForm={thingForm}
+                validate={this._validate("type")}
                 container={container}
                 types={ThingConfig.types}
                 thingIsBeingEdited={thingIsBeingEdited}
-                setType={(type) => dispatch(SetThingTypeAction.create(type))}
+                setValue={this._setValue("type")}
               />
-            </form>
-          </Col>
 
-          <Col media="lg" size={12}>
+              <ThingVendor
+                thing={thing}
+                thingForm={thingForm}
+                validate={this._validate("vendor")}
+                container={container}
+                thingIsBeingEdited={thingIsBeingEdited}
+                setValue={this._setValue("vendor")}
+              />
+
+
+            </Col>
+            <Col media="lg" gridSize={6}>
+              <ThingDescription
+                thing={thing}
+                thingForm={thingForm}
+                validate={this._validate("description")}
+                container={container}
+                thingIsBeingEdited={thingIsBeingEdited}
+                setValue={this._setValue("description")}/>
+
+              <ThingUser
+                thing={thing}
+                thingForm={thingForm}
+                validate={this._validate("user")}
+                container={container}
+                thingIsBeingEdited={thingIsBeingEdited}
+                setValue={this._setValue("user")}
+              />
+
+              <ThingDepartment
+                thing={thing}
+                thingForm={thingForm}
+                validate={this._validate("department")}
+                container={container}
+                thingIsBeingEdited={thingIsBeingEdited}
+                setValue={this._setValue("department")}
+              />
+
+
+              <ThingAssetId
+                thing={thing}
+                thingForm={thingForm}
+                validate={this._validate("assetId")}
+                container={container}
+                thingIsBeingEdited={thingIsBeingEdited}
+                setValue={this._setValue("assetId")}
+              />
+
+            </Col>
+          </form>
+
+          <Col media="lg">
             <ThingEditBtn
               editThing={() => dispatch(StartEditingThingAction.create(thing))}
               thingIsBeingEdited={thingIsBeingEdited}/>
@@ -138,11 +230,11 @@ export default class ThingContainer extends Component {
               thingIsBeingEdited={thingIsBeingEdited}/>
           </Col>
 
-          <Col media="lg" size={12}>
+          <Col media="lg">
             <ThingAlerts thingWasDeleted={thingWasDeleted} thingWasUpdated={thingWasUpdated}/>
           </Col>
 
-          <Col media="lg" size={12}>
+          <Col media="lg">
             {alert}
           </Col>
         </Container>
@@ -165,6 +257,7 @@ function select(state) {
     thingFetching: state.thingFetching,
     thingIsBeingEdited: state.thingIsBeingEdited,
     thing: state.thing,
+    thingForm: state.thingForm,
     thingPriorState: state.thingPriorState,
     thingWasDeleted: state.thingWasDeleted,
     thingWasUpdated: state.thingWasUpdated,

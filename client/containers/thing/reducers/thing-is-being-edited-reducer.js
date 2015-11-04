@@ -7,9 +7,7 @@ import ThingConfig from '../thing-config';
 import {
   GetThingAction, // false
   InitThingAction, // true - a new thing was created, which means it's editable
-  SetThingNameAction, // true - user is setting value on a thing
-  SetThingCategoryAction, // true - user is setting value on a thing
-  SetThingTypeAction, // true - user is setting value on a thing
+  SetThingPropertyAction,
   StartEditingThingAction, // true - user has started editing
   AbortEditingThingAction, // false - the user aborted editing
   CreateThingAction, // true (when fetching or on fail), false (when complete)
@@ -38,9 +36,7 @@ export function thingIsBeingEdited(state = false, action) {
         case AbortEditingThingAction.type:
           newState = false;
           break;
-        case SetThingNameAction:
-        case SetThingCategoryAction:
-        case SetThingTypeAction:
+        case SetThingPropertyAction.type:
         case StartEditingThingAction.type:
         case InitThingAction.type:
           newState = true;

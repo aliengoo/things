@@ -9,12 +9,29 @@ import ThingConfig from '../thing-config';
 const GetThingAction = AsyncActionCreator("GetThingAction", ThingConfig.container);
 // expects nothing
 const InitThingAction = SyncActionCreator("InitThingAction", ThingConfig.container);
-// expects a string
-const SetThingNameAction = SyncActionCreator("SetThingNameAction", ThingConfig.container);
-// expects a string
-const SetThingCategoryAction = SyncActionCreator("SetThingCategoryAction", ThingConfig.container);
-// expects a type
-const SetThingTypeAction =  SyncActionCreator("SetThingTypeAction", ThingConfig.container);
+
+const SetThingPropertyAction = SyncActionCreator("SetThingPropertyAction", ThingConfig.container);
+
+//
+const SetThingFormPropertyValidityAction = function SetThingFormPropertyValidityActionCreator() {
+  const type = "SetThingFormPropertyValidityAction";
+  return {
+    type,
+    create: function(creationData) {
+      creationData.element.checkValidity();
+
+      // data sent to thingForm reducer
+      let data = {};
+      data[creationData.property] = creationData.element.validity;
+
+      return {
+        container: ThingConfig.container,
+        type,
+        data
+      };
+    }
+  };
+};
 
 // expects an object representing the thing to create
 const CreateThingAction = AsyncActionCreator("CreateThingAction");
@@ -35,9 +52,9 @@ const CreateThingActionBroadcastAction = AsyncActionCreator("CreateThingActionBr
 
 module.exports.GetThingAction = GetThingAction;
 module.exports.InitThingAction = InitThingAction;
-module.exports.SetThingNameAction = SetThingNameAction;
-module.exports.SetThingCategoryAction = SetThingCategoryAction;
-module.exports.SetThingTypeAction = SetThingTypeAction;
+module.exports.SetThingPropertyAction = SetThingPropertyAction;
+
+module.exports.SetThingFormPropertyValidityAction = SetThingFormPropertyValidityAction();
 
 module.exports.StartEditingThingAction = StartEditingThingAction;
 module.exports.AbortEditingThingAction = AbortEditingThingAction;

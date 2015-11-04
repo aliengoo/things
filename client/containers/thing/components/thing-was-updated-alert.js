@@ -21,5 +21,5 @@ export default class ThingWasUpdatedWarning extends Component {
 }
 
 ThingWasUpdatedWarning.propTypes = {
-  thingWasUpdated: PropTypes.bool.isRequired
+  thingWasUpdated: PropTypes.bool
 };

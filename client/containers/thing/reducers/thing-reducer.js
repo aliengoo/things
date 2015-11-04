@@ -6,9 +6,7 @@ import ThingConfig from '../thing-config';
 import {
   GetThingAction,
   InitThingAction,
-  SetThingNameAction,
-  SetThingCategoryAction,
-  SetThingTypeAction,
+  SetThingPropertyAction,
   StartEditingThingAction,
   AbortEditingThingAction,
   CreateThingAction,
@@ -30,20 +28,17 @@ export function thing(state = null, action) {
         case InitThingAction.type:
           newState = {};
           break;
-        case SetThingCategoryAction.type:
-          newState = Object.assign({}, state || {}, {
-            category: action.data
-          });
-          break;
-        case SetThingTypeAction.type:
-          newState = Object.assign({}, state || {}, {
-            type: action.data
-          });
-          break;
-        case SetThingNameAction.type:
-          newState = Object.assign({}, state || {}, {
-            name: action.data
-          });
+        case SetThingPropertyAction.type:
+          let update = Object.assign({}, action.data);
+
+          // for category, when different to previous state, reset type
+          if (action.data.hasOwnProperty("category")) {
+            if (action.data.category !== state.category) {
+              update.type = "";
+            }
+          }
+
+          newState = Object.assign({}, state || {}, update);
           break;
         case StartEditingThingAction.type:
           // TODO

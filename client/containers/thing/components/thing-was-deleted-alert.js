@@ -21,5 +21,5 @@ export default class ThingWasDeletedWarning extends Component {
 }
 
 ThingWasDeletedWarning.propTypes = {
-  thingWasDeleted: PropTypes.bool.isRequired
+  thingWasDeleted: PropTypes.bool
 };

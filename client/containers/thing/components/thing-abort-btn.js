@@ -12,11 +12,9 @@ export default class ThingAbortBtn extends Component {
         type="button"
         onClick={abortEditingThing}
         visible={thingIsBeingEdited}>Abort</button>);
+    } else {
+      return <div></div>;
     }
-
-    return (
-
-    );
   }
 }
 

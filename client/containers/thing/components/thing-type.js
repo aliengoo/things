@@ -5,73 +5,32 @@ import React, {Component, PropTypes} from 'react';
 import FormGroup from '../../../components/form-group';
 import ControlLabel from '../../../components/control-label';
 
+import ThingStaticValue from './thing-static-value';
+import ThingSelect from './thing-select';
+
 export default class ThingType extends Component {
-
-  constructor() {
-    super();
-
-    this._renderEditable = this._renderEditable.bind(this);
-    this._renderViewable = this._renderViewable.bind(this);
-  }
-
   render() {
-    const {category, types, thingIsBeingEdited} = this.props;
+    const {thing, types, thingIsBeingEdited, setValue} = this.props;
+    const thingProperty = "type";
 
-    let content;
+    // type relies on category being set
+    const hasCategory = thing && thing.category;
+    const isReallyEditable = hasCategory &&
+      types.hasOwnProperty(thing.category) &&
+      thingIsBeingEdited;
 
-    if (category && types.hasOwnProperty(category) && thingIsBeingEdited) {
-      content = this._renderEditable(types[category]);
-    } else {
-      content = this._renderViewable();
-    }
+    const defaultValue = hasCategory ? "[EMPTY]" : "[CATEGORY NOT SET]";
 
     return (
       <div className="thing-type">
         <FormGroup>
           <ControlLabel>Type</ControlLabel>
-          {content}
+          {isReallyEditable ?
+            <ThingSelect thing={thing} thingProperty={thingProperty} options={types[thing.category]}
+                         setValue={setValue}/> :
+            <ThingStaticValue thing={thing} thingProperty={thingProperty} defaultValue={defaultValue}/>
+          }
         </FormGroup>
-      </div>
-    );
-  }
-
-  _renderViewable() {
-
-    const {category, thing} = this.props;
-
-    let thingType = (thing && thing.type) ? thing.type : ["EMPTY"];
-
-    let content;
-
-    if(category) {
-      content = <p className="form-control-static">{thingType}</p>;
-    } else {
-      content = <p className="form-control-static">{"[CATEGORY NOT SET]"}</p>;
-    }
-
-    return (
-      <div className="thing-viewable">
-        {content}
-      </div>
-    );
-  }
-
-  _renderEditable() {
-
-    const {category, thing, types} = this.props;
-
-    let thingType = (thing && thing.type) ? thing.type : [""];
-
-    var categoryTypes = types[category];
-
-    let options = categoryTypes.map((categoryType, key) =>
-      <option value={categoryType} key={key}>categoryType</option>);
-
-    return (
-      <div className="thing-editable">
-        <select value={thingType}  ref="thingName" className="form-control" onChange={this._onChange}>
-          {options}
-        </select>
       </div>
     );
   }
@@ -83,5 +42,5 @@ ThingType.propTypes = {
   category: PropTypes.string,
   thing: PropTypes.object,
   types: PropTypes.object.isRequired,
-  setType: PropTypes.func.isRequired
+  setValue: PropTypes.func.isRequired
 };

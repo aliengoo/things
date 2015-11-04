@@ -30,6 +30,8 @@ const initialState = {
   // the thing currently being viewed or edited
   thing: null,
 
+  thingForm: {},
+
   // when a thing is being edited, this is the previous state
   thingPriorState: null,
 
