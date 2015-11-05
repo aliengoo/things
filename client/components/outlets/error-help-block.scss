@@ -1,0 +1,11 @@
+@import "../component-variables";
+
+.error-help-block {
+}
+
+.error-item {
+  padding-top: 2px;
+  font-size: 12px;
+  font-weight: bold;
+  color: $error-color;
+}

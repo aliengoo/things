@@ -4,7 +4,15 @@ import React, {Component, PropTypes} from 'react';
 import ModelValueSelect from '../../../../components/inlets/model-value-select';
 import ThingConfig from '../../thing-config';
 
-export default class ThingType extends Component {
+export default class ThingModelValueSelect extends Component {
+  constructor(props, label, modelProperty, options, html5InputOptions) {
+    super(props);
+    this.label = label;
+    this.modelProperty = modelProperty;
+    this.options = options;
+    this.html5InputOptions = html5InputOptions || {};
+  }
+
   render() {
     const {
       isEditable,
@@ -13,28 +21,21 @@ export default class ThingType extends Component {
       setModelValue
       } = this.props;
 
-    // information specific to type selector
-    const hasCategory = !!model && model.category;
-    const hasTypesForCategory = hasCategory && ThingConfig.types.hasOwnProperty(model.category);
-    const typeOptions = hasTypesForCategory ? ThingConfig.types[model.category] : [];
-    const typeDefaultValue = hasCategory ? "[EMPTY]" : "[CATEGORY NOT SET]";
-
     return (
       <ModelValueSelect
-        label="Type"
-        options={typeOptions}
+        label={this.label}
+        options={this.options}
         model={model}
-        modelProperty="type"
+        modelProperty={this.modelProperty}
         isEditable={isEditable}
         formState={formState}
         setModelValue={setModelValue}
-        defaultValue={typeDefaultValue}
-        html5InputOptions={{"required": true}}
+        html5InputOptions={this.html5InputOptions}
       />);
   }
 }
 
-ThingType.propTypes = {
+ThingModelValueSelect.propTypes = {
   model: PropTypes.object,
   isEditable: PropTypes.bool,
   formState: PropTypes.object,

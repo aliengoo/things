@@ -5,12 +5,12 @@ import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {getSocket} from '../../api/socket';
 
-import ContainerFluid from '../../components/container-fluid';
-import PageHeader from '../../components/page-header';
-import Row from '../../components/row';
-import Col from '../../components/col';
-import FlexRow from '../../components/flex-row';
-import FlexColumn from '../../components/flex-column';
+import ContainerFluid from '../../components/layout/container-fluid';
+import PageHeader from '../../components/outlets/page-header';
+import Row from '../../components/layout/row';
+import Col from '../../components/layout/col';
+import FlexRow from '../../components/layout/flex-row';
+import FlexColumn from '../../components/layout/flex-column';
 
 import {ContainerChangeAction} from '../actions/common-actions';
 

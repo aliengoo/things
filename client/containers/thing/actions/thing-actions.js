@@ -2,7 +2,7 @@
 
 import AsyncActionCreator from '../../../actions/async-action-creator';
 import SyncActionCreator from '../../../actions/sync-action-creator';
-import {evaluate} from '../../../components/element-state-evaluator';
+import {evaluate} from '../../../helpers/element-state-eval';
 
 import ThingConfig from '../thing-config';
 
@@ -19,11 +19,15 @@ const SetThingFormPropertyValidityAction = function SetThingFormPropertyValidity
   return {
     type,
     create: function(creationData) {
-      // data sent to thingFormElementState reducer
+      // data sent to thingFormState reducer
       let data = {};
+
+
       data[creationData.property] = evaluate(
         creationData.element,
-        creationData.priorState[creationData.property]);
+        (creationData.priorState || {}) [creationData.property],
+        (creationData.formState || {})[creationData.property]
+      );
 
       return {
         container: ThingConfig.container,

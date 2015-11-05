@@ -2,29 +2,11 @@
 
 export default {
   container: "thing",
-  categories: ["Hardware", "Software"],
-  validation: {
-    name: {
-      required: true,
-      minLength: 2,
-      maxLength: 100
-    },
-    category: {
-      required: true
-    },
-    type: {
-      required: true
-    },
-    vendor: {},
-    description: {},
-    user: {},
-    department: {},
-    assetId: {}
-  },
-
+  categories: ["", "Hardware", "Software"],
   // mapped to categories
   types: {
     "Hardware": [
+      "",
       "desktop",
       "keyboard",
       "mobile",
@@ -36,6 +18,7 @@ export default {
     ],
 
     "Software": [
+      "",
       "database",
       "database-tool",
       "operating-system",

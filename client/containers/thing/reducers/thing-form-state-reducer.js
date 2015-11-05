@@ -16,7 +16,7 @@ import {
   UpdateThingActionBroadcastAction
 } from '../actions/thing-actions';
 
-export function thingFormElementState(state = null, action) {
+export function thingFormState(state = null, action) {
   let newState = state;
 
   if (action.container === ThingConfig.container) {
@@ -46,7 +46,23 @@ export function thingFormElementState(state = null, action) {
           break;
         // when validation occurs, set the property and the validity result
         case SetThingFormPropertyValidityAction.type:
+
           newState = Object.assign({}, state, action.data);
+
+          let formValidity = true;
+
+          for(var key in newState) {
+            if (newState.hasOwnProperty(key)) {
+              let elementState = newState[key];
+
+              if (elementState && elementState.$validity && !elementState.$validity.valid ) {
+                formValidity = false;
+                break;
+              }
+            }
+          }
+
+          newState.valid = formValidity;
           break;
         // don't do anything
         case SetThingPropertyAction.type:

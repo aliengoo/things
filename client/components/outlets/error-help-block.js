@@ -9,10 +9,10 @@ import React, {Component, PropTypes} from 'react';
  */
 export default class ErrorHelpBlock extends Component {
   render() {
-    const {formElementState, property} = this.props;
+    const {formState, property} = this.props;
 
-    if (formElementState && formElementState[property] && formElementState[property].$validity) {
-      let $validity = formElementState[property].$validity;
+    if (formState && formState[property] && formState[property].$validity) {
+      let $validity = formState[property].$validity;
       let errors = [];
 
       React.Children.forEach(this.props.children, function (child) {
@@ -23,7 +23,7 @@ export default class ErrorHelpBlock extends Component {
 
       return (
         <div className="error-help-block">
-          {errors.map((error, key) => (<div className="help-block" key={key} data-type={error.type}>{error.content}</div>))}
+          {errors.map((error, key) => (<div className="error-item" key={key} data-type={error.type}>{error.content}</div>))}
         </div>);
     } else {
       return (<div></div>);
@@ -33,5 +33,5 @@ export default class ErrorHelpBlock extends Component {
 
 ErrorHelpBlock.propTypes = {
   property: PropTypes.string.isRequired,
-  formElementState: PropTypes.object
+  formState: PropTypes.object
 };
