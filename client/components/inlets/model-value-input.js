@@ -16,6 +16,7 @@ export default class ModelValueInput extends Component {
 
   render() {
     const {
+      formState,
       label,
       isEditable,
       model,
@@ -28,6 +29,7 @@ export default class ModelValueInput extends Component {
       <FormGroup>
         <ControlLabel>{label}</ControlLabel>
         <Inlet
+          formState={formState}
           tag="input"
           model={model}
           modelProperty={modelProperty}

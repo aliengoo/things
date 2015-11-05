@@ -100,8 +100,10 @@ export default class ThingContainer extends Component {
   }
 
   _setModelValue() {
-    const {dispatch, thingPriorState, thingFormState} = this.props;
+    const {dispatch} = this.props;
     return function (modelState) {
+
+      console.log(modelState);
       dispatch(SetThingPropertyAction.create(modelState));
       dispatch(SetThingFormPropertyValidityAction.create(modelState));
     };

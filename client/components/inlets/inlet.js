@@ -26,11 +26,10 @@ export default class Inlet extends Component {
   }
 
   componentDidMount() {
-    const {setModelValue, modelProperty} = this.props;
 
     // force a value on initial load, this sets up the formState for the input
     let validationTimeout = setTimeout(() => {
-      setModelValue(modelProperty, this.refs[modelProperty]);
+      this.setModelValue();
       clearTimeout(validationTimeout);
     }, 1);
   }
@@ -50,10 +49,10 @@ export default class Inlet extends Component {
 
     element.checkValidity();
 
-    let valueHistory = inletFormState.$valueHistory || [];
+    let valueHistory  = inletFormState.$valueHistory || [];
 
-    let previousValue = inletFormState.$valueHistory.length > 0 ?
-      inletFormState.$valueHistory[0] :
+    let previousValue = valueHistory.length > 0 ?
+      valueHistory[0] :
       undefined;
 
     let hasChanged = !_.isEqual(
