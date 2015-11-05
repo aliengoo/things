@@ -47,15 +47,15 @@ export function thingFormState(state = null, action) {
         // when validation occurs, set the property and the validity result
         case SetThingFormPropertyValidityAction.type:
 
-          newState = Object.assign({}, state, action.data);
+          newState = Object.assign({}, state, action.data.$formState);
 
           let formValidity = true;
 
           for(var key in newState) {
             if (newState.hasOwnProperty(key)) {
-              let elementState = newState[key];
+              let modelState = newState[key];
 
-              if (elementState && elementState.$validity && !elementState.$validity.valid ) {
+              if (modelState && !modelState.$valid ) {
                 formValidity = false;
                 break;
               }

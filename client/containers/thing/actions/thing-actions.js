@@ -12,31 +12,7 @@ const GetThingAction = AsyncActionCreator("GetThingAction", ThingConfig.containe
 const InitThingAction = SyncActionCreator("InitThingAction", ThingConfig.container);
 
 const SetThingPropertyAction = SyncActionCreator("SetThingPropertyAction", ThingConfig.container);
-
-//
-const SetThingFormPropertyValidityAction = function SetThingFormPropertyValidityActionCreator() {
-  const type = "SetThingFormPropertyValidityAction";
-  return {
-    type,
-    create: function(creationData) {
-      // data sent to thingFormState reducer
-      let data = {};
-
-
-      data[creationData.property] = evaluate(
-        creationData.element,
-        (creationData.priorState || {}) [creationData.property],
-        (creationData.formState || {})[creationData.property]
-      );
-
-      return {
-        container: ThingConfig.container,
-        type,
-        data
-      };
-    }
-  };
-};
+const SetThingFormPropertyValidityAction = SyncActionCreator("SetThingFormPropertyValidityAction", ThingConfig.container);
 
 // expects an object representing the thing to create
 const CreateThingAction = AsyncActionCreator("CreateThingAction");
@@ -59,7 +35,7 @@ module.exports.GetThingAction = GetThingAction;
 module.exports.InitThingAction = InitThingAction;
 module.exports.SetThingPropertyAction = SetThingPropertyAction;
 
-module.exports.SetThingFormPropertyValidityAction = SetThingFormPropertyValidityAction();
+module.exports.SetThingFormPropertyValidityAction = SetThingFormPropertyValidityAction;
 
 module.exports.StartEditingThingAction = StartEditingThingAction;
 module.exports.AbortEditingThingAction = AbortEditingThingAction;

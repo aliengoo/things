@@ -7,4 +7,8 @@ export default class InputInlet extends Inlet {
   constructor(props) {
     super(props, "input");
   }
+
+  render() {
+
+  }
 }

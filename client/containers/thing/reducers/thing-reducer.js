@@ -29,11 +29,14 @@ export function thing(state = null, action) {
           newState = {};
           break;
         case SetThingPropertyAction.type:
-          let update = Object.assign({}, action.data);
+          let update = {
+          };
+
+          update[action.data.$modelProperty] = action.data.$value;
 
           // for category, when different to previous state, reset type
-          if (action.data.hasOwnProperty("category")) {
-            if (action.data.category !== state.category) {
+          if (action.data.$modelProperty === "category") {
+            if (action.data.$value !== state.category) {
               update.type = "";
             }
           }

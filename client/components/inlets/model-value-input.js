@@ -15,7 +15,7 @@ import Inlet from './inlet';
 export default class ModelValueInput extends Inlet {
 
   constructor(props) {
-    super(props);
+    super(props, "input");
     this._renderEditable = this._renderEditable.bind(this);
   }
 
@@ -28,42 +28,8 @@ export default class ModelValueInput extends Inlet {
       } = this.props;
 
     return isEditable ?
-      this._renderEditable() :
+      super.render() :
       <ModelValueStatic label={label} model={model} modelProperty={modelProperty}/>;
-  }
-
-  _renderEditable() {
-    const {
-      formState,
-      label,
-      model,
-      modelProperty,
-      defaultValue,
-      html5InputOptions
-      } = this.props;
-
-    let elementStateAttributes = toCustomHtmlAttributes(formState, modelProperty);
-
-    let attributes = Object.assign({}, {
-        className: "form-control",
-        name: modelProperty,
-        ref: modelProperty,
-        value: model[modelProperty],
-        defaultValue: defaultValue,
-        onChange: this._setModelValue
-      },
-      html5InputOptions,
-      elementStateAttributes);
-
-    let input = React.createElement("input", attributes);
-
-    return (
-      <FormGroup>
-        <ControlLabel>{label}</ControlLabel>
-        {input}
-        <Html5ErrorHelpBlock formState={formState} property={modelProperty}/>
-      </FormGroup>
-    );
   }
 }
 

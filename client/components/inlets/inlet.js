@@ -4,13 +4,23 @@ import _ from 'lodash';
 import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 
-import {toCustomHtmlAttributes} from '../../helpers/element-state-eval';
+const defaultModelState = {
+  $attachAttr: {},
+  $modelProperty: "",
+  $element: {},
+  $valueHistory: [],
+  $value: null,
+  $valid: null,
+  $validity: {},
+  $hasChanged: false,
+  $dirty: false
+};
 
 export default class Inlet extends Component {
 
-  constructor(props) {
+  constructor(props, tag) {
     super(props);
-
+    this.tag = tag;
     this.setModelValue = this.setModelValue.bind(this);
   }
 
@@ -26,23 +36,17 @@ export default class Inlet extends Component {
 
   evaluateModelState() {
     const {modelProperty, formState} = this.props;
-
-    let inletFormState = formState && formState.hasOwnProperty(modelProperty) ? formState[modelProperty] : undefined;
-
+    let inletFormState = this.getModelState();
     let element = this.refs[modelProperty];
 
     if (!inletFormState) {
-      return {
+      return Object.assign({}, defaultModelState, {
+        $formState: formState,
         $modelProperty: modelProperty,
-        $element: element,
-        $valueHistory: [],
-        $value: null,
-        $valid: null,
-        $validity: {},
-        $hasChanged: false,
-        $dirty: false
-      };
+        $element: element
+      });
     }
+
     element.checkValidity();
 
     let valueHistory = inletFormState.$valueHistory || [];
@@ -51,21 +55,21 @@ export default class Inlet extends Component {
       inletFormState.$valueHistory[0] :
       undefined;
 
-    let hasChanged = !_.isEqual(normaliseFalsey(previousValue), normaliseFalsey(element.value));
+    let hasChanged = !_.isEqual(
+      this._normaliseFalsey(previousValue),
+      this._normaliseFalsey(element.value));
 
     if (hasChanged) {
-      // queue, add the new element value to the beginning
       let newLength = valueHistory.unshift(element.value);
-
-      // if the queue size exceeds the buffer
       if (newLength > 5) {
-        // discard the last item
         valueHistory.pop();
       }
     }
 
     let modelState = Object.assign({}, {
-      $attachAttr: {},
+      $formState: formState,
+      $attachAttr: {
+      },
       $element: element,
       $valueHistory: valueHistory,
       $value: element.value,
@@ -90,18 +94,61 @@ export default class Inlet extends Component {
     setModelValue(modelState);
   }
 
+  getModelState() {
+    const {formState, modelProperty} = this.props;
+
+    if (formState && formState.hasOwnProperty(modelProperty)) {
+      return formState[modelProperty];
+    }
+
+    return undefined;
+  }
+
+  render() {
+    const {
+      model,
+      modelProperty,
+      defaultValue,
+      html5InputOptions
+      } = this.props;
+
+    let modelState = this.getModelState();
+
+    let attributes = Object.assign({}, {
+        className: "form-control",
+        name: modelProperty,
+        ref: modelProperty,
+        value: model[modelProperty],
+        defaultValue: defaultValue,
+        onChange: this._setModelValue
+      },
+      html5InputOptions,
+      modelState.$attachAttr);
+
+    return React.createElement(this.tag, attributes);
+  }
+
   _isFalsey(value) {
     const falseyValues = ["", null, undefined, NaN, 0];
     return falseyValues.indexOf(value) >= 0;
   }
 
   _normaliseFalsey() {
-    return isFalsey(value) ? null : value;
+    return this._isFalsey(value) ? null : value;
   }
 }
 
 Inlet.propTypes = {
+  options: PropTypes.array,
+  defaultValue: PropTypes.string,
+  // https://developer.mozilla.org/en/docs/Web/HTML/Element/Input
+  html5InputOptions: PropTypes.object,
   formState: PropTypes.object,
+  // The parent model
+  model: PropTypes.object,
+  // The parent model property
+  modelProperty: PropTypes.string.isRequired,
+  // output from component
   setModelValue: PropTypes.func.isRequired,
-  modelProperty: PropTypes.string.isRequired
+  isEditable: PropTypes.bool
 };
