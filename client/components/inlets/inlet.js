@@ -18,10 +18,11 @@ const defaultModelState = {
 
 export default class Inlet extends Component {
 
-  constructor(props, tag) {
+  constructor(props) {
     super(props);
-    this.tag = tag;
     this.setModelValue = this.setModelValue.bind(this);
+    this.evaluateModelState = this.evaluateModelState.bind(this);
+
   }
 
   componentDidMount() {
@@ -106,13 +107,14 @@ export default class Inlet extends Component {
 
   render() {
     const {
+      tag,
       model,
       modelProperty,
       defaultValue,
       html5InputOptions
       } = this.props;
 
-    let modelState = this.getModelState();
+    let modelState = this.getModelState() || {};
 
     let attributes = Object.assign({}, {
         className: "form-control",
@@ -120,12 +122,12 @@ export default class Inlet extends Component {
         ref: modelProperty,
         value: model[modelProperty],
         defaultValue: defaultValue,
-        onChange: this._setModelValue
+        onChange: this.setModelValue
       },
       html5InputOptions,
       modelState.$attachAttr);
 
-    return React.createElement(this.tag, attributes);
+    return React.createElement(tag, attributes);
   }
 
   _isFalsey(value) {
@@ -139,6 +141,7 @@ export default class Inlet extends Component {
 }
 
 Inlet.propTypes = {
+  tag: PropTypes.string.isRequired,
   options: PropTypes.array,
   defaultValue: PropTypes.string,
   // https://developer.mozilla.org/en/docs/Web/HTML/Element/Input
