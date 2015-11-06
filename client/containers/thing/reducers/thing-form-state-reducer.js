@@ -1,6 +1,6 @@
 "use strict";
 
-import AsyncStatus from '../../../api/async-status';
+import FetchStatus from '../../../api/fetch-status';
 import ThingConfig from '../thing-config';
 import {
   AbortEditingThingAction,
@@ -21,7 +21,7 @@ export function thingFormState(state = null, action) {
 
   if (action.container === ThingConfig.container) {
 
-    if (!action._asyncStatus) {
+    if (!action.fetchStatus) {
       switch (action.type) {
         // When aborting, reset the form state
         case AbortEditingThingAction.type:
@@ -47,9 +47,13 @@ export function thingFormState(state = null, action) {
         // when validation occurs, set the property and the validity result
         case SetThingFormPropertyValidityAction.type:
 
+          let newModelState = {};
+          newModelState[action.data.modelState["$modelProperty"]] = action.data.modelState;
+
           newState = Object.assign({},
             state,
-            action.data);
+            action.data.formState,
+            newModelState);
 
           let formValidity = true;
 
@@ -71,7 +75,7 @@ export function thingFormState(state = null, action) {
           break;
       }
     } else {
-      if (action._asyncStatus === AsyncStatus.COMPLETE) {
+      if (action.fetchStatus === FetchStatus.COMPLETE) {
         switch (action.type) {
           // once created, delete, get or update, reset
           case CreateThingAction.type:

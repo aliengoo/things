@@ -15,18 +15,32 @@ import Col from '../../components/layout/col';
 import {ContainerChangeAction} from '../actions/common-actions';
 
 import {
-  AbortEditingThingAction,
-  StartEditingThingAction,
-  UpdateThingAction,
-  DeleteThingAction,
-  CreateThingAction,
-  SetThingPropertyAction,
-  SetThingFormPropertyValidityAction,
-  UpdateThingActionBroadcastAction,
-  DeleteThingActionBroadcastAction,
-  InitThingAction,
-  GetThingAction
-} from './actions/thing-actions';
+  createAbortEditingModelAction,
+  createBeginEditingModelAction,
+  createSetModelPropertyAction,
+  createValidateContainerAction,
+  createValidateModelPropertyAction
+} from '../../model/actions/model-sync-actions';
+
+const modelActionOptions = {
+  modelType: "thing",
+  container: ThingConfig.container
+};
+
+const AbortEditingModelAction = createAbortEditingModelAction(modelActionOptions);
+const BeginEditingModelAction = createBeginEditingModelAction(modelActionOptions);
+const SetModelPropertyAction = createSetModelPropertyAction(modelActionOptions);
+const ValidateContainerAction = createValidateContainerAction(modelActionOptions);
+const ValidateModelPropertyAction = createValidateModelPropertyAction(modelActionOptions);
+
+import {
+  createDeleteModelActionBroadcastAction,
+  createUpdateModelActionBroadcastAction
+} from '../../model/actions/model-broadcast-actions';
+
+const DeleteModelActionBroadcastAction = createDeleteModelActionBroadcastAction(modelActionOptions);
+const UpdateModelActionBroadcastAction = createUpdateModelActionBroadcastAction(modelActionOptions);
+
 
 // inlets - they take information in
 import ThingConfig from './thing-config';
@@ -46,7 +60,6 @@ import ThingAssetId from './components/inlets/thing-asset-id';
 import ThingCategory from './components/inlets/thing-category';
 import ThingType from './components/inlets/thing-type';
 
-
 /**
  * Root container
  */
@@ -63,21 +76,23 @@ export default class ThingContainer extends Component {
   }
 
   componentWillMount() {
-    this.props.dispatch(ContainerChangeAction.create(ThingConfig.container));
+    const {dispatch, thing} = this.props;
+
+    dispatch(ContainerChangeAction.create(ThingConfig.container));
 
     var socket = getSocket();
 
-    socket.on('UpdateThingActionBroadcastAction', (response) => {
-      UpdateThingActionBroadcastAction.create({
-        updatedThing: response.data,
-        thing: this.props.thing
+    socket.on('UpdateModelActionBroadcastAction', (response) => {
+      UpdateModelActionBroadcastAction.create({
+        updatedModel: response.data,
+        model: thing
       });
     });
 
-    socket.on('DeleteThingActionBroadcastAction', (response) => {
-      DeleteThingActionBroadcastAction.create({
-        deletedId: response.data,
-        thing: this.props.thing
+    socket.on('DeleteModelActionBroadcastAction', (response) => {
+      DeleteModelActionBroadcastAction.create({
+        _id: response.data,
+        model: thing
       });
     });
   }
@@ -86,7 +101,7 @@ export default class ThingContainer extends Component {
     const {thingIsBeingEdited, thingPriorState, dispatch} = this.props;
 
     if (thingIsBeingEdited) {
-      dispatch(AbortEditingThingAction.create(thingPriorState));
+      dispatch(AbortEditingModelAction.create(thingPriorState));
     }
   }
 
@@ -100,12 +115,15 @@ export default class ThingContainer extends Component {
   }
 
   _setModelValue() {
-    const {dispatch} = this.props;
+    const {dispatch, thingFormState} = this.props;
     return function (modelState) {
 
-      console.log(modelState);
-      dispatch(SetThingPropertyAction.create(modelState));
-      dispatch(SetThingFormPropertyValidityAction.create(modelState));
+      let data = {
+        formState: thingFormState,
+        modelState
+      };
+      dispatch(SetThingFormPropertyValidityAction.create(data));
+      dispatch(SetThingPropertyAction.create(data));
     };
   }
 
@@ -133,7 +151,7 @@ export default class ThingContainer extends Component {
 
   _onAbortClick() {
     const {thingPriorState, dispatch} = this.props;
-    dispatch(AbortEditingThingAction.create(thingPriorState));
+    dispatch(AbortEditingModelAction.create(thingPriorState));
   }
 
   render() {

@@ -1,6 +1,6 @@
 "use strict";
 
-import SyncActionCreator from './../../actions/sync-action-creator';
+import SyncActionCreator from './../../model/actions/sync-action-creator';
 
 const ContainerChangeAction = SyncActionCreator("ContainerChangeAction");
 

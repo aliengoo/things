@@ -1,10 +1,10 @@
 "use strict";
 
-import AsyncStatus from '../api/async-status';
+import FetchStatus from '../api/fetch-status';
 
 export function err(state = "", action) {
 
-  if (action._asyncStatus === AsyncStatus.FAILED) {
+  if (action.fetchStatus === FetchStatus.FAILED) {
     return action.data;
   }
 

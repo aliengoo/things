@@ -1,13 +1,13 @@
 "use strict";
 
-import AsyncStatus from '../../../api/async-status';
+import FetchStatus from '../../../api/fetch-status';
 import ThingsConfig from '../things-config';
 
 export function thingsFetching(state = false, action) {
   var newState = state;
 
   if (action.container === ThingsConfig.container) {
-    if (action._asyncStatus === AsyncStatus.FETCHING) {
+    if (action.fetchStatus === FetchStatus.FETCHING) {
       newState = true;
     }
   }

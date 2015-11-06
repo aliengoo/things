@@ -1,6 +1,6 @@
 "use strict";
 
-import AsyncStatus from '../../../api/async-status';
+import FetchStatus from '../../../api/fetch-status';
 import ThingsConfig from '../things-config';
 
 export function thingsFilter(state = null, action) {

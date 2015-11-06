@@ -1,7 +1,7 @@
 "use strict";
 
 import _ from 'lodash';
-import AsyncStatus from '../../../api/async-status';
+import FetchStatus from '../../../api/fetch-status';
 import ThingConfig from '../thing-config';
 
 import {
@@ -25,7 +25,7 @@ export function thingIsBeingEdited(state = false, action) {
 
   if (action.container === ThingConfig.container) {
 
-    if (!action._asyncStatus) {
+    if (!action.fetchStatus) {
       switch(action.type) {
         case DeleteThingActionBroadcastAction.type: // the active user cannot continue editing a deleted thing
           // test to see if whatever the current thing is is the thing that an external user has deleted
@@ -42,7 +42,7 @@ export function thingIsBeingEdited(state = false, action) {
           newState = true;
           break;
       }
-    } else if (action._asyncStatus === AsyncStatus.COMPLETE) {
+    } else if (action.fetchStatus === FetchStatus.COMPLETE) {
       switch (action.type) {
         case CreateThingAction.type:
         case UpdateThingAction.type:
@@ -51,7 +51,7 @@ export function thingIsBeingEdited(state = false, action) {
           newState = false;
           break;
       }
-    } else if (action._asyncStatus === AsyncStatus.FETCHING || action._asyncStatus === AsyncStatus.FAILED) {
+    } else if (action.fetchStatus === FetchStatus.FETCHING || action.fetchStatus === FetchStatus.FAILED) {
       // maintain edit status, even on fail - allows for retries
       switch (action.type) {
         case CreateThingAction.type:

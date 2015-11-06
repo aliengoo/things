@@ -36,16 +36,16 @@ export default class Inlet extends Component {
 
   evaluateModelState() {
     const {modelProperty, formState} = this.props;
-    let inletFormState = this.getModelState();
+    let inletFormState = this.getModelState() || Object.assign({}, defaultModelState);
     let element = this.refs[modelProperty];
 
-    if (!inletFormState) {
-      return Object.assign({}, defaultModelState, {
-        $formState: formState,
-        $modelProperty: modelProperty,
-        $element: element
-      });
-    }
+    //if (!inletFormState) {
+    //  return Object.assign({}, defaultModelState, {
+    //    $formState: formState,
+    //    $modelProperty: modelProperty,
+    //    $element: element
+    //  });
+    //}
 
     element.checkValidity();
 
@@ -67,10 +67,10 @@ export default class Inlet extends Component {
     }
 
     let modelState = Object.assign({}, {
-      $formState: formState,
       $attachAttr: {
       },
       $element: element,
+      $modelProperty: modelProperty,
       $valueHistory: valueHistory,
       $value: element.value,
       $valid: element.validity.valid,
@@ -107,11 +107,20 @@ export default class Inlet extends Component {
   render() {
     const {
       tag,
+      options,
       model,
       modelProperty,
       defaultValue,
       html5InputOptions
       } = this.props;
+
+    let curryOptions = {};
+
+    let hasOptions = options && options.length > 0;
+
+    if (tag === "select" && !hasOptions) {
+      curryOptions.disabled = true;
+    }
 
     let modelState = this.getModelState() || {};
 
@@ -124,9 +133,26 @@ export default class Inlet extends Component {
         onChange: this.setModelValue
       },
       html5InputOptions,
+      curryOptions,
       modelState.$attachAttr);
 
-    return React.createElement(tag, attributes);
+    switch(tag.toLowerCase()) {
+      case "input":
+      case "textarea":
+        return React.createElement(tag, attributes);
+      case "select":
+        if (hasOptions) {
+          let htmlOptions = options.map((o, k) => <option value={o} key={k}>{o}</option>);
+          return React.createElement(tag, attributes, htmlOptions);
+        } else {
+          return React.createElement(tag, attributes);
+        }
+    }
+
+    return React.createElement(
+      <div>
+        Element {tag} was not recognised
+      </div>);
   }
 
   _isFalsey(value) {
@@ -134,7 +160,7 @@ export default class Inlet extends Component {
     return falseyValues.indexOf(value) >= 0;
   }
 
-  _normaliseFalsey() {
+  _normaliseFalsey(value) {
     return this._isFalsey(value) ? null : value;
   }
 }

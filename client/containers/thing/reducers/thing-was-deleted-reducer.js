@@ -1,6 +1,6 @@
 "use strict";
 
-import AsyncStatus from '../../../api/async-status';
+import FetchStatus from '../../../api/fetch-status';
 import ThingConfig from '../thing-config';
 
 import {

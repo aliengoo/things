@@ -5,81 +5,41 @@ import React, {Component, PropTypes} from 'react';
 import FormGroup from './../outlets/form-group';
 import ControlLabel from './../outlets/control-label';
 import ModelValueStatic from './../outlets/model-value-static';
+import Inlet from '../../components/inlets/inlet';
 
 export default class ModelValueSelect extends Component {
 
-  constructor(props) {
-    super(props);
-
-    this._renderEditable = this._renderEditable.bind(this);
-    this._setModelValue = this._setModelValue.bind(this);
-  }
-
-  componentDidMount() {
-    const {setModelValue, modelProperty} = this.props;
-
-    let validationTimeout = setTimeout(() => {
-      setModelValue(modelProperty, this.refs[modelProperty]);
-      clearTimeout(validationTimeout);
-    }, 1);
-  }
-
   render() {
     const {
+      options,
+      formState,
       label,
       isEditable,
       model,
       modelProperty,
-      defaultValue
-      } = this.props;
-
-    return isEditable ?
-      this._renderEditable() :
-      <ModelValueStatic label={label} model={model} modelProperty={modelProperty} defaultValue={defaultValue}/>;
-  }
-
-  _setModelValue() {
-    const {setModelValue, modelProperty} = this.props;
-    setModelValue(modelProperty, this.refs[modelProperty]);
-  }
-
-  _renderEditable() {
-    const {
-      label,
-      options,
-      model,
-      modelProperty,
-      defaultValue,
-      html5InputOptions
-      } = this.props;
-
-    let curryOptions = {};
-
-    if (!options || options.length === 0) {
-      curryOptions.disabled = true;
-    }
-
-    let attributes = Object.assign({}, {
-        className: "form-control",
-        ref: modelProperty,
-        name: modelProperty,
-        value: model[modelProperty],
-        defaultValue: defaultValue,
-        onChange: this._setModelValue
-      },
       html5InputOptions,
-      curryOptions);
+      setModelValue
+      } = this.props;
 
-    let htmlOptions = options.map((o, k) => <option value={o} key={k}>{o}</option>);
-
-    let select = React.createElement("select", attributes, htmlOptions);
-
-    return (
+    let editableContent = (
       <FormGroup>
         <ControlLabel>{label}</ControlLabel>
-        {select}
-      </FormGroup>
-    );
+        <Inlet
+          tag="select"
+          options={options}
+          formState={formState}
+          model={model}
+          modelProperty={modelProperty}
+          defaultValue={""}
+          html5InputOptions={html5InputOptions}
+          setModelValue={setModelValue}
+          isEditable={isEditable}
+        />
+      </FormGroup>);
+
+    return isEditable ?
+      editableContent :
+      <ModelValueStatic label={label} model={model} modelProperty={modelProperty}/>;
   }
 }
 
@@ -109,6 +69,5 @@ ModelValueSelect.defaultProps = {
     type: "text",
     required: false,
     disabled: false
-  },
-  debounce: 0
+  }
 };

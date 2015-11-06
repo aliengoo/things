@@ -1,7 +1,7 @@
 "use strict";
 
 import _ from 'lodash';
-import AsyncStatus from '../../../api/async-status';
+import FetchStatus from '../../../api/fetch-status';
 import ThingConfig from '../thing-config';
 
 import {
@@ -23,7 +23,7 @@ export function thingPriorState(state = null, action) {
 
   if (action.container === ThingConfig.container) {
 
-    if (!action._asyncStatus) {
+    if (!action.fetchStatus) {
       switch(action.type) {
         case InitThingAction.type:
         case AbortEditingThingAction.type:
@@ -46,7 +46,7 @@ export function thingPriorState(state = null, action) {
           }
       }
     } else {
-      if (action._asyncStatus === AsyncStatus.COMPLETE) {
+      if (action.fetchStatus === FetchStatus.COMPLETE) {
         switch (action.type) {
           case CreateThingAction.type:
           case UpdateThingAction.type:

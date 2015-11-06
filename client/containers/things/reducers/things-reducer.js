@@ -1,7 +1,7 @@
 "use strict";
 
 import _ from 'lodash';
-import AsyncStatus from '../../../api/async-status';
+import FetchStatus from '../../../api/fetch-status';
 import ThingsConfig from '../things-config';
 
 import {
@@ -45,7 +45,7 @@ export function things(state = [], action) {
     return newState;
   }
 
-  if (action._asyncStatus === AsyncStatus.COMPLETE) {
+  if (action.fetchStatus === FetchStatus.COMPLETE) {
     switch (action.type) {
       case FindThingsAction.type:
         newState = action.data;

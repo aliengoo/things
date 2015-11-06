@@ -1,6 +1,6 @@
 "use strict";
 
-import AsyncStatus from '../../../api/async-status';
+import FetchStatus from '../../../api/fetch-status';
 import ThingConfig from '../thing-config';
 
 import {
@@ -23,7 +23,7 @@ export function thing(state = null, action) {
   if (action.container === ThingConfig.container) {
 
     // not async operation
-    if (!action._asyncStatus) {
+    if (!action.fetchStatus) {
       switch (action.type) {
         case InitThingAction.type:
           newState = {};
@@ -32,11 +32,11 @@ export function thing(state = null, action) {
           let update = {
           };
 
-          update[action.data.$modelProperty] = action.data.$value;
+          update[action.data.modelState.$modelProperty] = action.data.modelState.$value;
 
           // for category, when different to previous state, reset type
-          if (action.data.$modelProperty === "category") {
-            if (action.data.$value !== state.category) {
+          if (action.data.modelState.$modelProperty === "category") {
+            if (action.data.modelState.$value !== state.category) {
               update.type = "";
             }
           }
@@ -60,7 +60,7 @@ export function thing(state = null, action) {
           }
           break;
       }
-    } else if (action._asyncStatus === AsyncStatus.COMPLETE) {
+    } else if (action.fetchStatus === FetchStatus.COMPLETE) {
       switch (action.type) {
         case  GetThingAction.type:
           newState = Object.assign({}, action.data);
