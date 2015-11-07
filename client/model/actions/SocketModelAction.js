@@ -15,6 +15,7 @@ export {
 export class SocketModelAction extends ModelAction {
   constructor(actionType, modelType) {
     super(actionType, modelType);
+    this.emitter =`${actionType}:${modelType}`;
   }
 
   _createFetchStatusActions() {
@@ -22,6 +23,7 @@ export class SocketModelAction extends ModelAction {
       fetching: (data) => {
         return {
           actionType: this.actionType,
+          modelType: this.modelType,
           data,
           fetchStatus: FetchStatus.FETCHING
         };
@@ -29,12 +31,14 @@ export class SocketModelAction extends ModelAction {
       complete: (data) => {
         return {
           actionType: this.actionType,
+          modelType: this.modelType,
           data, fetchStatus: FetchStatus.COMPLETE
         };
       },
       failed: (data) => {
         return {
           actionType: this.actionType,
+          modelType: this.modelType,
           data,
           fetchStatus: FetchStatus.FAILED
         };
@@ -48,15 +52,13 @@ export class SocketModelAction extends ModelAction {
         fetching,
         complete,
         failed
-        } = this._createFetchStatusActions();
+        } = this._createFetchStatusActions().bind(this);
 
       dispatch(fetching(data));
 
       let defer = Q.defer();
 
-      let emitter = options.modelType ? `${options.actionType}:${options.modelType}` : options.actionType;
-
-      socket.emit(emitter, {
+      socket.emit(this.emitter, {
         data
       }, (response) => {
         // both resolve, even if there is an error

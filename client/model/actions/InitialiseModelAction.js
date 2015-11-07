@@ -2,20 +2,22 @@
 
 import ModelAction from './ModelAction';
 
-export default class AbortEditingModelAction extends ModelAction {
+export default class InitialiseModelAction extends ModelAction {
   constructor(modelType) {
-    super("AbortEditingModelAction", modelType);
+    super("InitialiseModelAction", modelType);
   }
 
   static containerModel(previousState = {}, action) {
+
     if (!ModelAction.isMatch(action, action.instance)) {
       return previousState;
     }
 
     let newState = {
-      editing: false,
+      editing: true,
       previousModel: null,
-      currentModel: action.data
+      currentModel: {},
+      externalUpdate: false
     };
 
     return Object.assign({}, previousState, newState);

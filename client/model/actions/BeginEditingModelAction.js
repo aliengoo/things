@@ -7,16 +7,16 @@ export default class BeginEditingModelAction extends ModelAction {
     super("BeginEditingModelAction", modelType);
   }
 
-  model(previousState = {}, action) {
+  static containerModel(previousState = {}, action) {
 
-    let newState = {};
-
-    if (action.actionType !== this.actionType) {
+    if (!ModelAction.isMatch(action, action.instance)) {
       return previousState;
     }
 
-    newState.editing = true;
-    newState.previousModel = action.data;
+    let newState = {
+      editing: true,
+      previousModel: Object.assign({}, action.data) // copy of current model
+    };
 
     return Object.assign({}, previousState, newState);
   }

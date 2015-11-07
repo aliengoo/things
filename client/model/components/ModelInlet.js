@@ -1,9 +1,10 @@
+
 "use strict";
 
 import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 
-export default class Inlet extends Component {
+export default class ModelInlet extends Component {
 
   constructor(props) {
     super(props);
@@ -76,7 +77,7 @@ export default class Inlet extends Component {
   }
 }
 
-Inlet.propTypes = {
+ModelInlet.propTypes = {
   tag: PropTypes.string.isRequired,
   modelProperty: PropTypes.string.isRequired,
   defaultValue: PropTypes.string,

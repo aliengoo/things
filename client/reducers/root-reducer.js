@@ -3,41 +3,37 @@
 import {combineReducers} from 'redux';
 
 // global reducers
-import {err} from './err-reducer';
+import {err} from './err';
 
-// container reducers
-import {container} from '../containers/reducers/container-reducer';
+import AbortEditingModelAction from './../model/actions/AbortEditingModelAction.js';
+import BeginEditingModelAction from './../model/actions/BeginEditingModelAction.js';
+import CreateModelAction from './../model/actions/CreateModelAction.js';
+import CreateModelBroadcastAction from './../model/actions/CreateModelBroadcastAction.js';
+import DeleteModelAction from './../model/actions/DeleteModelAction.js';
+import DeleteModelBroadcastAction from './../model/actions/DeleteModelBroadcastAction.js';
+import GetModelAction from './../model/actions/GetModelAction.js';
+import SetModelPropertyAction from './../model/actions/SetModelPropertyAction.js';
+import SetModelPropertyStateAction from './../model/actions/SetModelPropertyStateAction.js';
+import UpdateModelAction from './../model/actions/UpdateModelAction.js';
+import UpdateModelBroadcastAction from './../model/actions/UpdateModelBroadcastAction.js';
+import ModelReducerBundler from './../model/actions/ModelReducerBundler';
 
-// thing container reducers
-import {thingFetching} from '../containers/thing/reducers/thing-fetching-reducer';
-import {thingIsBeingEdited} from '../containers/thing/reducers/thing-is-being-edited-reducer';
-import {thingPriorState} from '../containers/thing/reducers/thing-prior-state-reducer';
-import {thing} from '../containers/thing/reducers/thing-reducer';
-import {thingWasDeleted} from '../containers/thing/reducers/thing-was-deleted-reducer';
-import {thingWasUpdated} from '../containers/thing/reducers/thing-was-updated-reducer';
-import {thingFormState} from '../containers/thing/reducers/thing-form-state-reducer';
-
-// things container reducers
-import {thingsFetching} from '../containers/things/reducers/things-fetching-reducer';
-import {thingsFilter} from '../containers/things/reducers/things-filter-reducer';
-import {thingsPage} from '../containers/things/reducers/things-page-reducer';
-import {things} from '../containers/things/reducers/things-reducer';
+let model = ModelReducerBundler.bundle([
+  AbortEditingModelAction,
+  BeginEditingModelAction,
+  CreateModelAction,
+  CreateModelBroadcastAction,
+  DeleteModelAction,
+  DeleteModelBroadcastAction,
+  GetModelAction,
+  SetModelPropertyAction,
+  SetModelPropertyStateAction,
+  UpdateModelAction,
+  UpdateModelBroadcastAction
+]);
 
 const rootReducer = combineReducers({
-  container,
-  err,
-  thingFetching,
-  thingIsBeingEdited,
-  thingPriorState,
-  thing,
-  thingFormState,
-  thingWasDeleted,
-  thingWasUpdated,
-
-  thingsFetching,
-  thingsFilter,
-  thingsPage,
-  things
+  thing: model
 });
 
 export default rootReducer;

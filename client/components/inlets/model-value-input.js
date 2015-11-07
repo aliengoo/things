@@ -47,14 +47,15 @@ export default class ModelValueInput extends Component {
 }
 
 ModelValueInput.propTypes = {
+  currentModel: PropTypes.object,
+  editable: PropTypes.bool,
+  modelFormState: PropTypes.object,
+  onChange: PropTypes.func.isRequired,
   label: PropTypes.string,
   defaultValue: PropTypes.string,
   html5InputOptions: PropTypes.object,
   formState: PropTypes.object,
-  model: PropTypes.object,
-  modelProperty: PropTypes.string.isRequired,
-  setModelValue: PropTypes.func.isRequired,
-  isEditable: PropTypes.bool
+  modelProperty: PropTypes.string.isRequired
 };
 
 ModelValueInput.defaultProps = {

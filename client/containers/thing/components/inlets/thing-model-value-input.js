@@ -32,8 +32,8 @@ export default class ThingModelValueInput extends Component {
 }
 
 ThingModelValueInput.propTypes = {
-  model: PropTypes.object,
-  isEditable: PropTypes.bool,
-  formState: PropTypes.object,
-  setModelValue: PropTypes.func.isRequired
+  currentModel: PropTypes.object,
+  editable: PropTypes.bool,
+  modelFormState: PropTypes.object,
+  onChange: PropTypes.func.isRequired
 };

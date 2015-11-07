@@ -1,6 +1,6 @@
 "use strict";
 
-export default {
+const ThingConfig = {
   container: "thing",
   categories: ["", "Hardware", "Software"],
   // mapped to categories
@@ -30,3 +30,7 @@ export default {
     ]
   }
 };
+
+export default {
+  ThingConfig
+}
