@@ -28,5 +28,6 @@ export default class ModelActionBundler {
       UpdateModelAction: new UpdateModelAction(modelType),
       UpdateModelBroadcastAction: new UpdateModelBroadcastAction(modelType)
     };
+
   }
 }

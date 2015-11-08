@@ -19,7 +19,7 @@ require('./routes/motd-route')(app);
 
 // sockets
 io.sockets.on('connection', function (socket) {
-  require('./socket-handlers/thing-socket-handler')(socket);
+  require('./socket-handlers/model-socket-handler')(socket);
 });
 
 

@@ -1,6 +1,6 @@
 "use strict";
 
-import FetchStatus from '../api/fetch-status';
+import {FetchStatus} from '../model/actions/SocketModelAction';
 
 export function err(state = "", action) {
 

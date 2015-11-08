@@ -1,4 +1,4 @@
-@import "../component-variables";
+@import "component-variables";
 
 [data-state-invalid='true'][data-state-dirty='true'] {
   border: 1px solid $error-color;

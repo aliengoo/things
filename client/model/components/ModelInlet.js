@@ -34,10 +34,11 @@ export default class ModelInlet extends Component {
       html5InputOptions
       } = this.props;
 
-    let curryOptions = {};
+    let curryOptions = {
+      disabled: !containerModel.editable
+    };
 
     let hasOptions = options && options.length > 0;
-
 
     if ((tag === "select" && !hasOptions) || containerModel.fetching) {
       curryOptions.disabled = true;

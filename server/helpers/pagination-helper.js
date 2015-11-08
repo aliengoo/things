@@ -6,6 +6,8 @@ module.exports.calculate = function (page, count) {
     page.totalPages = 0;
   }
 
+  page.limit = page.limit || 10;
+
   let remainder = count % page.limit;
 
   page.totalItems = count;

@@ -3,8 +3,8 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router';
 
-import NavBar from '../../components/outlets/nav-bar';
-import PageHeader from '../../components/outlets/page-header';
+import NavBar from '../../components/outlets/NavBar';
+import PageHeader from '../../components/outlets/PageHeader';
 
 import ContainerFluid from '../../components/layout/container-fluid';
 import Container from '../../components/layout/container';

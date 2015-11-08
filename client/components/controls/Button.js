@@ -8,7 +8,7 @@ const btnStyles = ["default", "primary", "success", "info", "warning", "danger"]
 export default class Button extends Component {
   render() {
     const {
-      isFetching,
+      fetching,
       children,
       disabled,
       visible,
@@ -34,7 +34,7 @@ export default class Button extends Component {
         className={className}
         type="button"
         onClick={onClick}
-        disabled={disabled || isFetching}>
+        disabled={disabled || fetching}>
         {children}
       </button>
     );
@@ -42,7 +42,7 @@ export default class Button extends Component {
 }
 
 Button.propTypes = {
-  isFetching: PropTypes.bool,
+  fetching: PropTypes.bool,
   btnStyle: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
   visible: PropTypes.bool,

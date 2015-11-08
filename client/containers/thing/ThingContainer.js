@@ -3,139 +3,33 @@
 import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react';
 import {connect} from 'react-redux';
-import {getSocket} from '../../api/socket';
 
-import ModelControls from '../../components/controls/model-controls';
-import NavBar from '../../components/outlets/nav-bar';
+import ModelControls from '../../model/components/ModelControls';
+import NavBar from '../../components/outlets/NavBar';
+import Form from '../../components/outlets/form';
 import Container from '../../components/layout/container';
 import Row from '../../components/layout/row';
 import Col from '../../components/layout/col';
 
 // inlets - they take information in
-import ThingConfig from './thing-config';
-import ModelValueInput from '../../components/inlets/model-value-input';
-import ModelValueSelect from '../../components/inlets/model-value-select';
-import Form from '../../components/outlets/form';
+import ThingConfig from './ThingConfig';
 
 // outlets - send information to the view
-import ThingHeader from './components/outlets/thing-header';
-import ThingAlerts from './components/outlets/thing-alerts';
-import ThingName from './components/inlets/thing-name';
-import ThingVendor from './components/inlets/thing-vendor';
-import ThingDepartment from './components/inlets/thing-department';
-import ThingUser from './components/inlets/thing-user';
-import ThingAssetId from './components/inlets/thing-asset-id';
+import ThingHeader from './components/outlets/ThingHeader';
 
-import ThingCategory from './components/inlets/thing-category';
-import ThingType from './components/inlets/thing-type';
+import ModelContainer from '../../model/ModelContainer';
 
-// actions
-import ModelActionBundler from '../../model/actions/ModelActionBundler';
-
-const {
-  AbortEditingModelAction,
-  BeginEditingModelAction,
-  CreateModelAction,
-  CreateModelBroadcastAction,
-  DeleteModelAction,
-  DeleteModelBroadcastAction,
-  GetModelAction,
-  InitialiseModelAction,
-  SetModelPropertyAction,
-  UpdateModelAction,
-  UpdateModelBroadcastAction
-} = ModelActionBundler.bundle("thing");
+import ModelFormGroupInlet from '../../model/components/ModelFormGroupInlet';
 
 /**
  * Root container
  */
-export default class ThingContainer extends Component {
-
-  constructor(props) {
-    super(props);
-
-    this._onChangeFn = this._onChangeFn.bind(this);
-    this._onAbortClick = this._onAbortClick.bind(this);
-    this._onSaveClick = this._onSaveClick.bind(this);
-    this._onEditClick = this._onEditClick.bind(this);
-    this._onDeleteClick = this._onDeleteClick.bind(this);
-  }
-
-  componentWillMount() {
-    const {dispatch, currentModel} = this.props;
-
-    var socket = getSocket();
-
-    socket.on('UpdateModelActionBroadcast', (response) => {
-      dispatch(UpdateModelBroadcastAction.invoke({
-        updatedModelId: response.data._id,
-        modelType: response.data.modelType,
-        currentModelId: currentModel._id
-      }));
-    });
-
-    socket.on('DeleteModelActionBroadcast', (response) => {
-      dispatch(DeleteModelBroadcastAction.invoke({
-        deletedModelId: response.data,
-        currentModelId: currentModel._id,
-        modelType: response.data.modelType
-      }));
-    });
-  }
-
-  componentWillUnmount() {
-    const {editing, previousModel, dispatch} = this.props;
-
-    if (editing) {
-      dispatch(AbortEditingModelAction.invoke(previousModel));
-    }
-  }
-
-  componentDidMount() {
-    const {params, dispatch} = this.props;
-    if (params && params.id) {
-      dispatch(GetModelAction.invoke(params.id));
-    } else {
-      dispatch(InitialiseModelAction.invoke());
-    }
-  }
-
-  _onChangeFn() {
-    return (element) => {
-      this.props.dispatch(SetModelPropertyAction.invoke(element));
-    };
-  }
-
-  _onEditClick() {
-    const {dispatch, currentModel} = this.props;
-
-    dispatch(BeginEditingModelAction.invoke(currentModel));
-  }
-
-  _onSaveClick() {
-    const {currentModel, dispatch} = this.props;
-
-    if (currentModel && !currentModel._id) {
-      dispatch(CreateModelAction.invoke(currentModel));
-    } else {
-      dispatch(UpdateModelAction.invoke(currentModel));
-    }
-  }
-
-  _onDeleteClick() {
-    const {currentModel, dispatch} = this.props;
-
-    if (currentModel && currentModel._id) {
-      dispatch(DeleteModelAction.invoke(currentModel._id));
-    }
-  }
-
-  _onAbortClick() {
-    const {previousModel, dispatch} = this.props;
-    dispatch(AbortEditingModelAction.invoke(previousModel));
-  }
+export default class ThingContainer extends ModelContainer {
 
   render() {
+
+    let containerModel = this.props.containerModel;
+
     const {
       fetching,
       editing,
@@ -145,7 +39,7 @@ export default class ThingContainer extends Component {
       externalDelete,
       externalUpdate,
       err
-      } = this.props;
+      } = containerModel;
 
     let alert = (<div></div>);
 
@@ -166,32 +60,16 @@ export default class ThingContainer extends Component {
               editing={editing}/>
 
           </Col>
-          <Form name="thingForm">
-            <Col media="lg" gridSize={6}>
-              <ThingName
-                currentModel={currentModel}
-                editing={editing}
-                modelFormState={modelFormState}
-                onChange={this._onChangeFn()}
-              />
 
-            </Col>
-            <Col media="lg" gridSize={6}>
-
-            </Col>
-
-            <Col media="lg">
-              <ModelControls
-                editing={editing}
-                isNew={currentModel && !currentModel._id}
-                isValid={modelFormState.valid}
-                onEditClick={this._onEditClick}
-                onSaveClick={this._onSaveClick}
-                onAbortClick={this._onAbortClick}
-                onDeleteClick={this._onDeleteClick}
-              />
-            </Col>
-          </Form>
+            <ModelFormGroupInlet
+              label="Name"
+              tag="input"
+              modelProperty="name"
+              defaultValue=""
+              html5InputOptions={{"placeholder": "Enter your name"}}
+              containerModel={containerModel}
+              onChange={super._onModelElementChange()}
+            />
 
           <Col media="lg">
             <ThingAlerts externalDelete={externalDelete} externalUpdate={externalUpdate}/>
@@ -206,21 +84,25 @@ export default class ThingContainer extends Component {
   }
 }
 
+ThingContainer.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  fetching: PropTypes.bool,
+  editing: PropTypes.bool,
+  currentModel: PropTypes.object,
+  previousModel: PropTypes.object,
+  modelFormState: PropTypes.object.isRequired,
+  externalDelete: PropTypes.bool,
+  externalUpdate: PropTypes.bool,
+  err: PropTypes.object
+};
+
+
 // Which props do we want to inject, given the global state?
 // Note: use https://github.com/faassen/reselect for better performance.
 function select(state) {
 
-  let {thing} = state;
-
   return {
-    fetching: thing.fetching,
-    editing: thing.editing,
-    currentModel: thing.currentModel,
-    previousModel: thing.previousModel,
-    modelFormState: thing.modelFormState,
-    externalDelete: thing.externalDelete,
-    externalUpdate: thing.externalUpdate,
-    err: thing.err
+    containerModel: state.thing
   };
 }
 

@@ -13,7 +13,6 @@ import DeleteModelAction from './../model/actions/DeleteModelAction.js';
 import DeleteModelBroadcastAction from './../model/actions/DeleteModelBroadcastAction.js';
 import GetModelAction from './../model/actions/GetModelAction.js';
 import SetModelPropertyAction from './../model/actions/SetModelPropertyAction.js';
-import SetModelPropertyStateAction from './../model/actions/SetModelPropertyStateAction.js';
 import UpdateModelAction from './../model/actions/UpdateModelAction.js';
 import UpdateModelBroadcastAction from './../model/actions/UpdateModelBroadcastAction.js';
 import ModelReducerBundler from './../model/actions/ModelReducerBundler';
@@ -27,7 +26,6 @@ let model = ModelReducerBundler.bundle([
   DeleteModelBroadcastAction,
   GetModelAction,
   SetModelPropertyAction,
-  SetModelPropertyStateAction,
   UpdateModelAction,
   UpdateModelBroadcastAction
 ]);

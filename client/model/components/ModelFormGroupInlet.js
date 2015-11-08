@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import ModelInlet from './ModelInlet';
-import FormGroup from '../../components/outlets/form-group';
-import ControlLabel from '../../components/outlets/control-label';
+import FormGroup from '../../components/outlets/FormGroup';
+import ControlLabel from '../../components/outlets/ControlLabel';
 
 export default class ModelFormGroupInlet extends Component {
   constructor(props) {
@@ -19,25 +19,23 @@ export default class ModelFormGroupInlet extends Component {
       onChange
       } = this.props;
 
-    let content;
-
-    if (this.editable) {
-      content =
-        (<ModelInlet
+    return (
+      <FormGroup>
+        <ControlLabel>{label}</ControlLabel>
+        <ModelInlet
           tag={tag}
           modelProperty={modelProperty}
           defaultValue={defaultValue}
           html5InputOptions={html5InputOptions}
           containerModel={containerModel}
           onChange={onChange}
-        />)
-    } else {
-
-    }
+        />
+      </FormGroup>);
   }
 }
 
 ModelFormGroupInlet.propTypes = {
+  label: PropTypes.string,
   tag: PropTypes.string.isRequired,
   modelProperty: PropTypes.string.isRequired,
   defaultValue: PropTypes.string,

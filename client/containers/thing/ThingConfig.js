@@ -33,4 +33,4 @@ const ThingConfig = {
 
 export default {
   ThingConfig
-}
+};

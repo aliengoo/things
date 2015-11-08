@@ -7,12 +7,12 @@ import React, {Component, PropTypes} from 'react';
  *
  * Each child under ErrorHelpBlock must match the name of the property on the validityState exactly
  */
-export default class ErrorHelpBlock extends Component {
+export default class ModelError extends Component {
   render() {
-    const {formState, property} = this.props;
+    const {modelState} = this.props;
 
-    if (formState && formState[property] && formState[property].$validity) {
-      let $validity = formState[property].$validity;
+    if (modelState.valid) {
+      let $validity = modelState.$validity;
       let errors = [];
 
       React.Children.forEach(this.props.children, function (child) {
@@ -22,8 +22,8 @@ export default class ErrorHelpBlock extends Component {
       });
 
       return (
-        <div className="error-help-block">
-          {errors.map((error, key) => (<div className="error-item" key={key} data-type={error.type}>{error.content}</div>))}
+        <div className="model-error">
+          {errors.map((error, key) => (<div className="model-error-item" key={key} data-type={error.type}>{error.content}</div>))}
         </div>);
     } else {
       return (<div></div>);
@@ -31,7 +31,6 @@ export default class ErrorHelpBlock extends Component {
   }
 }
 
-ErrorHelpBlock.propTypes = {
-  property: PropTypes.string.isRequired,
-  formState: PropTypes.object
+ModelError.propTypes = {
+  modelState: PropTypes.object
 };

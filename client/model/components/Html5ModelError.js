@@ -1,21 +1,21 @@
 "use strict";
 
 import React, {Component, PropTypes} from 'react';
-import ErrorHelpBlock from './../outlets/error-help-block';
+import ModelError from './ModelError';
 
 /**
  * https://developer.mozilla.org/en-US/docs/Web/API/ValidityState
  */
-export default class Html5ErrorHelpBlock extends Component {
+export default class Html5ModelError extends Component {
   render() {
-    const {formState, property} = this.props;
+    const {modelState} = this.props;
 
-    if (formState && formState.hasOwnProperty(property) && !formState[property].$dirty) {
+    if (!modelState.$dirty) {
       return(<div></div>);
     }
 
     return (
-      <ErrorHelpBlock formState={formState} property={property}>
+      <ModelError modelState={modelState}>
         <badInput>The browser was unable to convert this value</badInput>
         <patternMismatch>The value entered does not match the required pattern</patternMismatch>
         <rangeOverflow>The value entered is greater than the allowed maximum</rangeOverflow>
@@ -24,12 +24,11 @@ export default class Html5ErrorHelpBlock extends Component {
         <tooLong>The length of the value entered exceed the maximum length allowed</tooLong>
         <typeMismatch>The value entered is not in the required syntax for the input</typeMismatch>
         <valueMissing>A value is required</valueMissing>
-      </ErrorHelpBlock>
+      </ModelError>
     );
   }
 }
 
-Html5ErrorHelpBlock.propTypes = {
-  formState: PropTypes.object,
-  property: PropTypes.string.isRequired
+Html5ModelError.propTypes = {
+  modelState: PropTypes.object
 };

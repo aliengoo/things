@@ -5,10 +5,10 @@ import React, {Component, PropTypes} from 'react';
 class PageHeader extends React.Component {
   render() {
 
-    var klassName = this.props.align === 'center' ? 'text-center' : '';
+    let className = this.props.align === 'center' ? 'text-center' : '';
 
     return (
-      <header className={klassName}>
+      <header className={className}>
         <h1>{this.props.children}</h1>
       </header>
     );
