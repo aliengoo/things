@@ -1,6 +1,7 @@
 import ModelAction from './ModelAction';
 import keyMirror from 'keymirror';
 import Q from 'q';
+import {getSocket} from '../../api/socket';
 
 const FetchStatus = keyMirror({
   FETCHING: null,
@@ -15,7 +16,8 @@ export {
 export class SocketModelAction extends ModelAction {
   constructor(type, modelType) {
     super(type, modelType);
-    this.emitter =`${type}:${modelType}`;
+    this.emitter = `${type}`;
+
   }
 
   _createFetchStatusActions() {
@@ -47,18 +49,23 @@ export class SocketModelAction extends ModelAction {
   }
 
   invoke(data) {
+    var self = this;
+
     return (dispatch) => {
       const {
         fetching,
         complete,
         failed
-        } = this._createFetchStatusActions().bind(this);
+        } = self._createFetchStatusActions();
 
       dispatch(fetching(data));
 
       let defer = Q.defer();
 
-      socket.emit(this.emitter, {
+      let socket = getSocket();
+
+      socket.emit(self.emitter, {
+        modelType: self.modelType,
         data
       }, (response) => {
         // both resolve, even if there is an error

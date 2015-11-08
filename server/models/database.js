@@ -31,11 +31,15 @@ module.exports.update = function update(collectionName, document, callback) {
   } else {
 
     var update = {$set: assign({}, document)};
+    var options = {
+      upsert: false,
+      returnOriginal: false
+    };
     delete update._id;
 
-    collection.updateOne({
+    collection.findOneAndUpdate({
       _id: document._id
-    }, update, callback)
+    }, update, options, callback)
   }
 };
 
@@ -53,20 +57,29 @@ module.exports.findById = function findById(collectionName, _id, callback) {
   }, callback);
 };
 
-module.exports.find = function find(collectionName, query, page, callback) {
+module.exports.find = function find(collectionName, filter, page, callback) {
   var collection = database.collection(collectionName);
 
-  collection.count(query, function(err, count){
+  collection.count(filter, function(err, count){
     if (err) {
       callback(err);
     } else {
       paginationHelper.calculate(page, count);
 
       collection
-        .find(query)
+        .find(filter)
         .skip(page.skip)
         .limit(page.limit)
-        .toArray(callback);
+        .toArray(function(err, results) {
+          if (err) {
+            callback(err);
+          } else {
+            callback(undefined, {
+              page: page,
+              results: results
+            });
+          }
+        });
     }
   });
 };

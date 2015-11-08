@@ -27,7 +27,12 @@ export default class ModelFormGroupInlet extends Component {
 
 
     if (!containerModel.editing) {
-      return (<ModelFormGroupReadOnly containerModel={containerModel} label={label}/>);
+      return (
+        <ModelFormGroupReadOnly
+          containerModel={containerModel}
+          label={label}
+          modelProperty={modelProperty}
+        />);
     }
 
     const currentModelState = _.get(containerModel, `modelFormState.${modelProperty}`, undefined);

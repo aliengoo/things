@@ -6,7 +6,7 @@ module.exports = function (socket) {
   socket.on('CreateModelAction', (request, callback) => {
     database.insert(request.modelType, request.data, function (err, result) {
       callback({
-        data: result,
+        data: result.ops[0],
         err: err
       });
 
@@ -22,8 +22,9 @@ module.exports = function (socket) {
 
   socket.on('UpdateModelAction', (request, callback) => {
     database.update(request.modelType, request.data, function(err, result) {
+
       callback({
-        data: result,
+        data: request.data,
         err: err
       });
 
@@ -38,6 +39,7 @@ module.exports = function (socket) {
   });
 
   socket.on('DeleteModelAction', (request, callback) => {
+    console.log("Deleting:", request);
     database.removeById(request.modelType, request.data, function (err, result) {
       callback({
         data: request.data,
@@ -56,6 +58,15 @@ module.exports = function (socket) {
 
   socket.on('GetModelAction', (request, callback) => {
     database.findById(request.modelType, request.data, function (err, result) {
+      callback({
+        data: result,
+        err: err
+      });
+    });
+  });
+
+  socket.on('FilterModelsAction', (request, callback) => {
+    database.find(request.modelType, request.data.filter, request.data.page, function (err, result) {
       callback({
         data: result,
         err: err

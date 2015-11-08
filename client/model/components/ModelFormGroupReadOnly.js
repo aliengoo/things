@@ -15,6 +15,8 @@ export default class ModelFormGroupReadOnly extends Component {
 
     const value = _.get(containerModel, `currentModel.${modelProperty}`, "[EMPTY]");
 
+    console.log(containerModel.currentModel);
+
     return (
       <FormGroup>
         <ControlLabel>{label}</ControlLabel>
@@ -22,3 +24,9 @@ export default class ModelFormGroupReadOnly extends Component {
       </FormGroup>);
   }
 }
+
+ModelFormGroupReadOnly.propTypes = {
+  modelProperty: PropTypes.string.isRequired,
+  containerModel: PropTypes.object.isRequired,
+  label: PropTypes.string.isRequired
+};

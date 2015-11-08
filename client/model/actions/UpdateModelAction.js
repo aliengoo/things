@@ -22,6 +22,7 @@ export default class UpdateModelAction extends SocketModelAction {
         newState.err = null;
         break;
       case FetchStatus.COMPLETE:
+        newState.editing = false;
         newState.fetching = false;
         newState.previousModel = null;
         newState.currentModel = action.data;
