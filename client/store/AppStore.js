@@ -8,7 +8,8 @@ import { devTools, persistState } from 'redux-devtools';
 
 const initialState = {
   thing: {
-    currentModel: null,
+    modelType: "thing",
+    currentModel: {},
     previousModel: null,
     modelFormState: {
       valid: false
@@ -19,20 +20,20 @@ const initialState = {
     externalUpdate: false,
     externalNew: false,
     err: null
-  },
-
-  things: {
-    currentModels: [],
-    filter: {
-      limit: 10
-    },
-    page: {
-      current: 1
-    },
-    fetching: false,
-    externalNew: false,
-    err: null
   }
+
+  //things: {
+  //  currentModels: [],
+  //  filter: {
+  //    limit: 10
+  //  },
+  //  page: {
+  //    current: 1
+  //  },
+  //  fetching: false,
+  //  externalNew: false,
+  //  err: null
+  //}
 };
 
 const loggerMiddleware = createLogger();

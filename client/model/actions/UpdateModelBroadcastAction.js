@@ -2,12 +2,14 @@
 
 import ModelAction from './ModelAction';
 
+const ActionType = "UpdateModelBroadcastAction";
+
 /**
  * Invoke when another user updates a model.
  */
 export default class UpdateModelBroadcastAction extends ModelAction {
   constructor(modelType) {
-    super("UpdateModelBroadcastAction", modelType);
+    super(ActionType, modelType);
   }
 
   /**
@@ -22,7 +24,7 @@ export default class UpdateModelBroadcastAction extends ModelAction {
    */
   static containerModel(previousState = {}, action) {
 
-    if (!ModelAction.isMatch(action, action.instance)) {
+    if (action.type !== ActionType) {
       return previousState;
     }
 

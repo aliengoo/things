@@ -2,25 +2,28 @@
 
 import ModelAction from './ModelAction';
 
-const ActionType = "AbortEditingModelAction";
+const ActionType = "InitialiseCurrentModelAction";
 
-export default class AbortEditingModelAction extends ModelAction {
+export default class InitialiseCurrentModelAction extends ModelAction {
   constructor(modelType) {
     super(ActionType, modelType);
   }
 
   static containerModel(previousState = {}, action) {
+
     if (action.type !== ActionType) {
       return previousState;
     }
 
     let newState = {
-      editing: false,
       previousModel: null,
       currentModel: action.data
     };
 
-    return Object.assign({}, previousState, newState);
+    let x = Object.assign({}, previousState, newState);
+
+    console.log(x);
+    return x;
   }
 }
 

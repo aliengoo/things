@@ -1,16 +1,17 @@
 "use strict";
 
 import {FetchStatus, SocketModelAction} from './SocketModelAction';
-import ModelAction from  './ModelAction';
+
+const ActionType = "GetModelAction";
 
 export default class GetModelAction extends SocketModelAction {
   constructor(modelType) {
-    super("GetModelAction", modelType);
+    super(ActionType, modelType);
   }
 
   static containerModel(previousState = {}, action) {
 
-    if (!ModelAction.isMatch(action, action.instance)) {
+    if (action.type !== ActionType) {
       return previousState;
     }
 

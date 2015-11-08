@@ -17,7 +17,7 @@ app.use(cors());
 // routes
 require('./routes/motd-route')(app);
 
-// sockets
+// socketscd
 io.sockets.on('connection', function (socket) {
   require('./socket-handlers/model-socket-handler')(socket);
 });

@@ -1,7 +1,12 @@
+"use strict";
+
+import _ from 'lodash';
 import React, {Component, PropTypes} from 'react';
 import ModelInlet from './ModelInlet';
 import FormGroup from '../../components/outlets/FormGroup';
 import ControlLabel from '../../components/outlets/ControlLabel';
+import Html5ModelError from '../components/Html5ModelError';
+import ModelFormGroupReadOnly from './ModelFormGroupReadOnly';
 
 export default class ModelFormGroupInlet extends Component {
   constructor(props) {
@@ -11,6 +16,7 @@ export default class ModelFormGroupInlet extends Component {
   render() {
 
     const {
+      label,
       tag,
       modelProperty,
       defaultValue,
@@ -18,6 +24,13 @@ export default class ModelFormGroupInlet extends Component {
       containerModel,
       onChange
       } = this.props;
+
+
+    if (!containerModel.editing) {
+      return (<ModelFormGroupReadOnly containerModel={containerModel} label={label}/>);
+    }
+
+    const currentModelState = _.get(containerModel, `modelFormState.${modelProperty}`, undefined);
 
     return (
       <FormGroup>
@@ -30,6 +43,7 @@ export default class ModelFormGroupInlet extends Component {
           containerModel={containerModel}
           onChange={onChange}
         />
+        <Html5ModelError modelState={currentModelState}/>
       </FormGroup>);
   }
 }

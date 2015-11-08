@@ -13,16 +13,16 @@ export {
 };
 
 export class SocketModelAction extends ModelAction {
-  constructor(actionType, modelType) {
-    super(actionType, modelType);
-    this.emitter =`${actionType}:${modelType}`;
+  constructor(type, modelType) {
+    super(type, modelType);
+    this.emitter =`${type}:${modelType}`;
   }
 
   _createFetchStatusActions() {
     return {
       fetching: (data) => {
         return {
-          actionType: this.actionType,
+          type: this.type,
           modelType: this.modelType,
           data,
           fetchStatus: FetchStatus.FETCHING
@@ -30,14 +30,14 @@ export class SocketModelAction extends ModelAction {
       },
       complete: (data) => {
         return {
-          actionType: this.actionType,
+          type: this.type,
           modelType: this.modelType,
           data, fetchStatus: FetchStatus.COMPLETE
         };
       },
       failed: (data) => {
         return {
-          actionType: this.actionType,
+          type: this.type,
           modelType: this.modelType,
           data,
           fetchStatus: FetchStatus.FAILED

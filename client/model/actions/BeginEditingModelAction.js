@@ -2,14 +2,16 @@
 
 import ModelAction from './ModelAction';
 
+const ActionType = "BeginEditingModelAction";
+
 export default class BeginEditingModelAction extends ModelAction {
   constructor(modelType) {
-    super("BeginEditingModelAction", modelType);
+    super(ActionType, modelType);
   }
 
   static containerModel(previousState = {}, action) {
 
-    if (!ModelAction.isMatch(action, action.instance)) {
+    if (action.type !== ActionType) {
       return previousState;
     }
 

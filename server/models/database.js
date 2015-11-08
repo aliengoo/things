@@ -39,7 +39,7 @@ module.exports.update = function update(collectionName, document, callback) {
   }
 };
 
-module.export.removeById = function removeById(collectionName, _id, callback) {
+module.exports.removeById = function removeById(collectionName, _id, callback) {
   var collection = database.collection(collectionName);
   collection.removeOne({
     _id: _id

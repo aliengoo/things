@@ -10,9 +10,10 @@ export default class Html5ModelError extends Component {
   render() {
     const {modelState} = this.props;
 
-    if (!modelState.$dirty) {
+    if (!modelState || !modelState.$dirty) {
       return(<div></div>);
     }
+
 
     return (
       <ModelError modelState={modelState}>

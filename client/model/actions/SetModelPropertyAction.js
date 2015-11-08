@@ -3,10 +3,12 @@
 import _ from 'lodash';
 import ModelAction from './ModelAction';
 
+const ActionType = "SetModelPropertyAction";
+
 const defaultModelState = {
-  $attachAttr: {},
+  $attachAttr: null,
   $modelProperty: "",
-  $element: {},
+  $element: null,
   $valueHistory: [],
   $value: null,
   $valid: null,
@@ -29,7 +31,7 @@ class ModelPropertyElementEvaluator {
       return undefined;
     }
 
-    let previousModelState = this._getPreviousModelState(this.element, containerModel);
+    let previousModelState = this._getPreviousModelState(this.element, this.containerModel);
     let modelState = Object.assign({}, defaultModelState);
 
     this._elementValidityCheck(this.element, modelState);
@@ -39,7 +41,7 @@ class ModelPropertyElementEvaluator {
   }
 
   _getPreviousModelState(element, containerModel) {
-    return containerModel.modelFormState[element.name];
+    return containerModel.modelFormState[element.getAttribute("name")] || Object.assign({}, defaultModelState);
   }
 
   _elementValidityCheck(element, modelState) {
@@ -49,25 +51,29 @@ class ModelPropertyElementEvaluator {
 
   _updateModelState(element, previousModelState, modelState) {
 
-    let valueHistory = [...previousModelState.$valueHistory];
+    let valueHistory = [...previousModelState.$valueHistory || []];
 
     let previousValue = valueHistory.length > 0 ?
       valueHistory[0] :
       undefined;
 
-    modelState.hasChanged = !_.isEqual(
+    modelState.$hasChanged = !_.isEqual(
       this._normaliseFalsey(previousValue),
       this._normaliseFalsey(element.value));
 
-    if (modelState.hasChanged) {
+    if (modelState.$hasChanged) {
       let newLength = valueHistory.unshift(element.value);
       if (newLength > 5) {
         valueHistory.pop();
       }
     }
 
+    modelState.$value = element.value;
+    modelState.$validity = element.validity;
+    modelState.$modelProperty = element.getAttribute("name");
     modelState.$valueHistory = valueHistory;
     modelState.$dirty = valueHistory.length > 0;
+    modelState.$attachAttr = {};
     modelState.$attachAttr["data-state-valid"] = modelState.$valid;
     modelState.$attachAttr["data-state-invalid"] = !modelState.$valid;
     modelState.$attachAttr["data-state-dirty"] = modelState.$dirty;
@@ -105,7 +111,7 @@ class ModelFormStateEvaluator {
     for(let key in newModelFormState) {
       if (newModelFormState.hasOwnProperty(key)) {
         let modelState = newModelFormState[key];
-        if (modelState.valid === false) {
+        if (modelState.$valid === false) {
           valid = false;
           break;
         }
@@ -120,7 +126,7 @@ class ModelFormStateEvaluator {
 
 export default class SetModelPropertyAction extends ModelAction {
   constructor(modelType) {
-    super("SetModelPropertyAction", modelType);
+    super(ActionType, modelType);
   }
 
   /**
@@ -136,7 +142,7 @@ export default class SetModelPropertyAction extends ModelAction {
    */
   static containerModel(previousState = {}, action) {
 
-    if (!ModelAction.isMatch(action, action.instance)) {
+    if (action.type !== ActionType) {
       return previousState;
     }
 

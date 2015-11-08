@@ -1,5 +1,6 @@
 
 "use strict";
+import _ from 'lodash';
 
 import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
@@ -35,7 +36,7 @@ export default class ModelInlet extends Component {
       } = this.props;
 
     let curryOptions = {
-      disabled: !containerModel.editable
+      disabled: !containerModel.editing
     };
 
     let hasOptions = options && options.length > 0;
@@ -44,19 +45,23 @@ export default class ModelInlet extends Component {
       curryOptions.disabled = true;
     }
 
-    let modelState = containerModel.modelFormState[modelProperty];
+    const value = _.get(containerModel, `currentModel.${modelProperty}`, undefined);
+    const $attachAttr = _.get(
+      containerModel,
+      `modelFormState.${modelProperty}.$attachAttr`,
+      {});
 
     let attributes = Object.assign({}, {
         className: "form-control",
         name: modelProperty,
         ref: modelProperty,
-        value: containerModel.currentModel[modelProperty],
+        value: value,
         defaultValue: defaultValue,
         onChange: this._onChange
       },
       html5InputOptions,
       curryOptions,
-      modelState.$attachAttr);
+      $attachAttr);
 
     switch(tag.toLowerCase()) {
       case "input":

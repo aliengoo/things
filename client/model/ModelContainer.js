@@ -9,20 +9,26 @@ import ModelActionBundler from './actions/ModelActionBundler';
 
 export default class ModelContainer extends Component {
 
+  constructor(props) {
+    super(props);
+    this._onAbortClick = this._onAbortClick.bind(this);
+    this._onDeleteClick = this._onDeleteClick.bind(this);
+    this._onEditClick = this._onEditClick.bind(this);
+    this._onSaveClick = this._onSaveClick.bind(this);
+  }
+
   componentWillMount() {
     // initialise the actions, and bind the actions to the ModelContainer
-    let actions = ModelActionBundler.bundle(this.props.modelType);
+    let actions = ModelActionBundler.bundle(this.props.containerModel.modelType);
+    let self = this;
 
     for (let key in actions) {
       if (actions.hasOwnProperty(key)) {
-        this[key] = actions[key];
+        self[key] = actions[key];
       }
     }
-    this._watchForExternalChanges();
-  }
-
-  componentDidMount() {
     this._initialiseModel();
+    this._watchForExternalChanges();
   }
 
   componentWillUnmount() {
@@ -36,13 +42,14 @@ export default class ModelContainer extends Component {
   }
 
   _onEditClick() {
-    const {dispatch, currentModel} = this.props;
+    const {dispatch, containerModel} = this.props;
 
-    dispatch(this.BeginEditingModelAction.invoke(currentModel));
+    dispatch(this.BeginEditingModelAction.invoke(containerModel.currentModel));
   }
 
   _onSaveClick() {
-    const {currentModel, dispatch} = this.props;
+    const {containerModel, dispatch} = this.props;
+    const currentModel = containerModel.currentModel;
 
     if (currentModel && !currentModel._id) {
       dispatch(this.CreateModelAction.invoke(currentModel));
@@ -52,7 +59,9 @@ export default class ModelContainer extends Component {
   }
 
   _onDeleteClick() {
-    const {currentModel, dispatch} = this.props;
+    const {containerModel, dispatch} = this.props;
+    const currentModel = containerModel.currentModel;
+
 
     if (currentModel && currentModel._id) {
       dispatch(this.DeleteModelAction.invoke(currentModel._id));
@@ -64,24 +73,25 @@ export default class ModelContainer extends Component {
   }
 
   _initialiseModel() {
-    const {params, dispatch} = this.props;
+    const {params, dispatch, containerModel} = this.props;
     if (params && params.id) {
       dispatch(this.GetModelAction.invoke(params.id));
     } else {
-      dispatch(this.InitialiseModelAction.invoke());
+      dispatch(this.InitialiseCurrentModelAction.invoke({}));
+      dispatch(this.BeginEditingModelAction.invoke(containerModel.currentModel));
     }
   }
 
   _abortEditing() {
-    const {editing, previousModel, dispatch} = this.props;
+    const {containerModel, dispatch} = this.props;
 
-    if (editing) {
-      dispatch(this.AbortEditingModelAction.invoke(previousModel));
+    if (containerModel.editing) {
+      dispatch(this.AbortEditingModelAction.invoke(containerModel.previousModel));
     }
   }
 
   _watchForExternalChanges() {
-    const {dispatch, currentModel} = this.props;
+    const {dispatch, containerModel} = this.props;
 
     let socket = getSocket();
 
@@ -89,51 +99,23 @@ export default class ModelContainer extends Component {
       dispatch(this.UpdateModelBroadcastAction.invoke({
         updatedModelId: response.data._id,
         modelType: response.data.modelType,
-        currentModelId: currentModel._id
+        currentModelId: containerModel.currentModel._id
       }));
     });
 
     socket.on('DeleteModelActionBroadcast', (response) => {
       dispatch(this.DeleteModelBroadcastAction.invoke({
         deletedModelId: response.data,
-        currentModelId: currentModel._id,
+        currentModelId: containerModel.currentModel._id,
         modelType: response.data.modelType
       }));
     });
-  }
-
-  render() {
-    return (
-      <div>
-        <Form>
-          {this.props.children}
-          <Col media="lg">
-            <ModelControls
-              editing={editing}
-              isNew={currentModel && !currentModel._id}
-              isValid={modelFormState.valid}
-              onEditClick={this._onEditClick}
-              onSaveClick={this._onSaveClick}
-              onAbortClick={this._onAbortClick}
-              onDeleteClick={this._onDeleteClick}
-            />
-          </Col>
-        </Form>
-
-      </div>);
   }
 }
 
 ModelContainer.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  fetching: PropTypes.bool,
-  editing: PropTypes.bool,
-  currentModel: PropTypes.object,
-  previousModel: PropTypes.object,
-  modelFormState: PropTypes.object.isRequired,
-  externalDelete: PropTypes.bool,
-  externalUpdate: PropTypes.bool,
-  err: PropTypes.object
+  containerModel: PropTypes.object.isRequired
 };
 
 

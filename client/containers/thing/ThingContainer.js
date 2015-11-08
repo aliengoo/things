@@ -10,12 +10,24 @@ import Form from '../../components/outlets/form';
 import Container from '../../components/layout/container';
 import Row from '../../components/layout/row';
 import Col from '../../components/layout/col';
+// configuration
+import ThingConfig from './ThingConfig';
+
 
 // inlets - they take information in
-import ThingConfig from './ThingConfig';
+
+import ThingDepartment from './components/inlets/ThingDepartment';
+import ThingDescription from './components/inlets/ThingDescription';
+import ThingName from './components/inlets/ThingName';
+import ThingUser from './components/inlets/ThingUser';
+import ThingSerialNo from './components/inlets/ThingSerialNo';
+import ThingAssetId from './components/inlets/ThingAssetId';
+import ThingVendor from './components/inlets/ThingVendor';
+
 
 // outlets - send information to the view
 import ThingHeader from './components/outlets/ThingHeader';
+import ModelBroadcastAlerts from '../../model/components/ModelBroadcastAlerts';
 
 import ModelContainer from '../../model/ModelContainer';
 
@@ -61,18 +73,63 @@ export default class ThingContainer extends ModelContainer {
 
           </Col>
 
-            <ModelFormGroupInlet
-              label="Name"
-              tag="input"
-              modelProperty="name"
-              defaultValue=""
-              html5InputOptions={{"placeholder": "Enter your name"}}
-              containerModel={containerModel}
-              onChange={super._onModelElementChange()}
-            />
+          <Form name="thingForm">
+            <Col gridSize={6}>
+              <ThingName
+                onChange={this._onModelElementChange()}
+                containerModel={containerModel}
+              />
+
+
+              <ThingVendor
+                onChange={this._onModelElementChange()}
+                containerModel={containerModel}
+              />
+
+              <ThingSerialNo
+                onChange={this._onModelElementChange()}
+                containerModel={containerModel}
+              />
+
+              <ThingAssetId
+                onChange={this._onModelElementChange()}
+                containerModel={containerModel}
+              />
+
+            </Col>
+
+            <Col gridSize={6}>
+
+              <ThingDescription
+                onChange={this._onModelElementChange()}
+                containerModel={containerModel}
+              />
+
+              <ThingDepartment
+                onChange={this._onModelElementChange()}
+                containerModel={containerModel}
+              />
+              <ThingUser
+                onChange={this._onModelElementChange()}
+                containerModel={containerModel}
+              />
+            </Col>
+
+            <Col gridSize={12}>
+              <ModelControls
+                containerModel={containerModel}
+                onEditClick={this._onEditClick}
+                onAbortClick={this._onAbortClick}
+                onSaveClick={this._onSaveClick}
+                onDeleteClick={this._onDeleteClick}
+              />
+            </Col>
+
+          </Form>
+
 
           <Col media="lg">
-            <ThingAlerts externalDelete={externalDelete} externalUpdate={externalUpdate}/>
+            <ModelBroadcastAlerts externalDelete={externalDelete} externalUpdate={externalUpdate}/>
           </Col>
 
           <Col media="lg">
@@ -86,14 +143,7 @@ export default class ThingContainer extends ModelContainer {
 
 ThingContainer.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  fetching: PropTypes.bool,
-  editing: PropTypes.bool,
-  currentModel: PropTypes.object,
-  previousModel: PropTypes.object,
-  modelFormState: PropTypes.object.isRequired,
-  externalDelete: PropTypes.bool,
-  externalUpdate: PropTypes.bool,
-  err: PropTypes.object
+  containerModel: PropTypes.object.isRequired
 };
 
 

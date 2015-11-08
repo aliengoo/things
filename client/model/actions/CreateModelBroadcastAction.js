@@ -2,12 +2,14 @@
 
 import ModelAction from './ModelAction';
 
+const ActionType = "CreateModelBroadcastAction";
+
 /**
  * Invoke when another user creates a new model.
  */
 export default class CreateModelBroadcastAction extends ModelAction {
   constructor(modelType) {
-    super("CreateModelBroadcastAction", modelType);
+    super(ActionType, modelType);
   }
 
   /**
@@ -21,7 +23,7 @@ export default class CreateModelBroadcastAction extends ModelAction {
    * @returns {*}
    */
   static containerModel(previousState = {}, action) {
-    if (!ModelAction.isMatch(action, action.instance)) {
+    if (action.type !== ActionType) {
       return previousState;
     }
 

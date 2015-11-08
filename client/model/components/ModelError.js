@@ -11,7 +11,7 @@ export default class ModelError extends Component {
   render() {
     const {modelState} = this.props;
 
-    if (modelState.valid) {
+    if (!modelState.$valid) {
       let $validity = modelState.$validity;
       let errors = [];
 

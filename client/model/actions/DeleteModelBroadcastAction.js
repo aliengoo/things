@@ -2,12 +2,14 @@
 
 import ModelAction from './ModelAction';
 
+const ActionType = "DeleteModelBroadcastAction";
+
 /**
  * Invoke when another user deletes a model.
  */
 export default class DeleteModelBroadcastAction extends ModelAction {
   constructor(modelType) {
-    super("DeleteModelBroadcastAction", modelType);
+    super(ActionType, modelType);
   }
 
   /**
@@ -22,7 +24,7 @@ export default class DeleteModelBroadcastAction extends ModelAction {
    */
   static containerModel(previousState = {}, action) {
 
-    if (!ModelAction.isMatch(action, action.instance)) {
+    if (action.type !== ActionType) {
       return previousState;
     }
 

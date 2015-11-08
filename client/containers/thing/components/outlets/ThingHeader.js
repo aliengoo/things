@@ -4,13 +4,13 @@ import React, {Component, PropTypes} from 'react';
 
 export default class ThingHeader extends Component {
   render() {
-    const {thing, thingIsBeingEdited} = this.props;
+    const {currentModel} = this.props;
 
     let klassName;
     let content;
 
-    if (thing && thing.name) {
-      content = this.props.thing.name;
+    if (currentModel && currentModel.name) {
+      content = currentModel.name;
     } else {
       klassName = "thing-header-with-no-name";
       content = "The thing has no name";
