@@ -12,11 +12,14 @@ import Row from '../../components/layout/row';
 import Col from '../../components/layout/col';
 import ModelBroadcastAlerts from '../../model/components/ModelBroadcastAlerts';
 
-import ModelContainer from '../../model/ModelContainer';
+import ModelsContainer from '../../models/ModelsContainer';
 
+export default class ThingsContainer extends ModelsContainer {
 
+  setPage(page) {
 
-export default class ThingsContainer extends ModelContainer {
+  }
+
   render() {
 
   }

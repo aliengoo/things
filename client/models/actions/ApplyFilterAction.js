@@ -3,9 +3,9 @@
 import React, {Component, PropTypes} from 'react';
 import {FetchStatus, SocketModelAction} from '../../model/actions/SocketModelAction';
 
-const ActionType = "FilterModelsAction";
+const ActionType = "ApplyFilterAction";
 
-export default class FilterModelsAction extends SocketModelAction {
+export default class ApplyFilterAction extends SocketModelAction {
   constructor(modelType) {
     super(ActionType, modelType);
   }
