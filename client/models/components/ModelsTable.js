@@ -1,3 +1,8 @@
-/**
- * Created by gbunter on 08/11/2015.
- */
+import React, {Component, PropTypes} from 'react';
+
+export default class ModelsTable extends Component {
+
+  render() {
+
+  }
+}
