@@ -1,14 +1,14 @@
 "use strict";
 
 import SetPageAction from './SetPageAction';
-import FilterModelsAction from './FilterModelsAction';
+import ApplyFilterAction from './ApplyFilterAction';
 
 export default class ModelActionBundler {
 
   static bundle(modelType) {
     return {
       SetPageAction: new SetPageAction(modelType),
-      FilterModelsAction: new FilterModelsAction(modelType)
+      ApplyFilterAction: new ApplyFilterAction(modelType)
     };
   }
 }

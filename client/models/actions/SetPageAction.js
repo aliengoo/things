@@ -16,9 +16,9 @@ export default class SetPageAction extends ModelAction {
       return previousContainerState;
     }
 
-    let newState = {
-      page: Object.assign({}, previousContainerState.page, {current: action.data})
-    };
+    let newState = Object.assign({}, previousContainerState.filter, {
+      page: Object.assign({}, previousContainerState.filter.page, {current: action.data})
+    });
 
     return Object.assign({}, previousContainerState, newState);
   }

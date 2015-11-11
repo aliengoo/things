@@ -20,20 +20,19 @@ const initialState = {
     externalUpdate: false,
     externalNew: false,
     err: null
-  }
+  },
 
-  //things: {
-  //  currentModels: [],
-  //  filter: {
-  //    limit: 10
-  //  },
-  //  page: {
-  //    current: 1
-  //  },
-  //  fetching: false,
-  //  externalNew: false,
-  //  err: null
-  //}
+  things: {
+    currentModels: [],
+    filter: {
+      page: {
+        limit: 10,
+        current: 1
+      }
+    },
+    fetching: false,
+    err: null
+  }
 };
 
 const loggerMiddleware = createLogger();

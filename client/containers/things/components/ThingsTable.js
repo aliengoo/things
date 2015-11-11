@@ -16,17 +16,21 @@ export default class ThingsTable extends Component {
     return (
       <table className="table">
         <thead>
-          <th>
-             <td>Name</td>
-             <td>Description</td>
-          </th>
+        <th>
+          <td>Name</td>
+          <td>Description</td>
+          <td></td>
+        </th>
         </thead>
         <tbody>
         {currentModels.map((thing) => {
+          let link = `/thing/${thing._id}`;
+
           return (
             <tr>
               <td>{thing.name}</td>
               <td>{thing.description}</td>
+              <td><Link to={link}>Open</Link></td>
             </tr>
           );
         })}

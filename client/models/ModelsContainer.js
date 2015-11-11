@@ -9,16 +9,14 @@ import ModelsActionBundler from './actions/ModelsActionBundler';
 export default class ModelsContainer extends Component {
 
   applyFilter() {
-    this.props
-    this.FilterModelsAction.invoke();
+    const {filter, page} = this.props.containerModel;
+    this.ApplyFilterAction.invoke();
   }
 
   setPage(selectedPage) {
-    this.setPageAction.invoke(selectedPage);
-  }
-
-  openModel() {
-
+    const {filter} = this.props.containerModel;
+    this.SetPageAction.invoke(selectedPage);
+    this.ApplyFilterAction.invoke(filter);
   }
 
   componentWillMount() {

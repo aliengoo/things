@@ -57,17 +57,22 @@ module.exports.findById = function findById(collectionName, _id, callback) {
   }, callback);
 };
 
-module.exports.find = function find(collectionName, filter, page, callback) {
+module.exports.find = function find(collectionName, filter, callback) {
   var collection = database.collection(collectionName);
 
   collection.count(filter, function(err, count){
     if (err) {
       callback(err);
     } else {
-      paginationHelper.calculate(page, count);
+
+      // extract page information
+      let internalFilter = assign({}, filter);
+      delete internalFilter.page;
+
+      let page = paginationHelper.calculate(filter.page, count);
 
       collection
-        .find(filter)
+        .find(internalFilter)
         .skip(page.skip)
         .limit(page.limit)
         .toArray(function(err, results) {
@@ -75,7 +80,8 @@ module.exports.find = function find(collectionName, filter, page, callback) {
             callback(err);
           } else {
             callback(undefined, {
-              page: page,
+              // recombine page into filter
+              filter: assign(internalFilter, {page: page}),
               results: results
             });
           }

@@ -65,8 +65,8 @@ module.exports = function (socket) {
     });
   });
 
-  socket.on('FilterModelsAction', (request, callback) => {
-    database.find(request.modelType, request.data.filter, request.data.page, function (err, result) {
+  socket.on('ApplyFilterAction', (request, callback) => {
+    database.find(request.modelType, request.data.filter, request.data.filter.page, function (err, result) {
       callback({
         data: result,
         err: err

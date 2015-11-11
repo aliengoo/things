@@ -9,10 +9,10 @@ export default class InitialiseCurrentModelAction extends ModelAction {
     super(ActionType, modelType);
   }
 
-  static containerModel(previousState = {}, action) {
+  static containerModel(previousContainerModel = {}, action) {
 
     if (action.type !== ActionType) {
-      return previousState;
+      return previousContainerModel;
     }
 
     let newState = {
@@ -20,7 +20,7 @@ export default class InitialiseCurrentModelAction extends ModelAction {
       currentModel: action.data
     };
 
-    let x = Object.assign({}, previousState, newState);
+    let x = Object.assign({}, previousContainerModel, newState);
 
     console.log(x);
     return x;
