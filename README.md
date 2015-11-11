@@ -69,16 +69,14 @@ If the _Reducer_ is not interested, the original _Container Model_ is returned; 
 	    if (action.type !== ActionType) {
 	      return previousContainerModel;
 	    }
+ 
 	
-	    let newState = {
+	    let newState = Object.assign({}, previousContainerModel, {
 	      previousModel: null,
 	      currentModel: action.data
-	    };
-	
-	    let x = Object.assign({}, previousContainerModel, newState);
-	
-	    console.log(x);
-	    return x;
+	    });
+   
+	    return newState;
 	  }
 	}
 	
